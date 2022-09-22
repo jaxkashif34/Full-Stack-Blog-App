@@ -2,3 +2,4 @@
 /client/.env
 /server/node_modules
 /server/.env
+/server/prisma
