@@ -1,5 +1,6 @@
 import express, { Express, Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
+import bcrypt from 'bcrypt';
 require('dotenv').config();
 const prisma = new PrismaClient();
 const app: Express = express();
@@ -7,21 +8,18 @@ const app: Express = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// ******************** POSTS ********************
-// displaying all posts
-// careate a post
-// display a single post based on uuid
-// delete a post based on the uuid
-// edit a psot
-// ******************** USERS ********************
-// displaying the user data name uuid basic profile
-// create a user
-// delete a user
-// edit their profile
-// delete something from profile
+// const main = async () => {
+//   const post = await prisma.post.findMany({
+//     where: {
+//       autherId: '207206e2-ace1-4bb3-9d9e-102d0bb5d7d8',
+//     },
+//   });
+//   console.log(post);
+// };
 
-// implementation of posts
-// display all posts
+// main();
+
+// ******************** POSTS ********************
 app.get('/', async (req: Request, res: Response) => {
   try {
     const allPosts = await prisma.post.findMany();
@@ -110,22 +108,25 @@ app.put('/edit-post/:id', async (req: Request, res: Response) => {
     res.send(JSON.stringify(e));
   }
 });
-
-// create user
-
-app.post('/create-user', async (req: Request, res: Response) => {
+// ******************** USER ********************
+// SIGN-IN USER
+app.post('/sign-up', async (req: Request, res: Response) => {
   const { userData } = req.body;
   const name: string = userData.name;
   const age: number = userData.age;
   const email: string = userData.email;
-  const role = userData.role;
+  const password: string = userData.password;
+  const hashedPassword = await bcrypt.hash(password, 10);
+  const userDetail = {
+    name,
+    age,
+    email,
+    password: hashedPassword,
+  };
   try {
     const createdUser = await prisma.user.create({
       data: {
-        name,
-        age,
-        email,
-        role,
+        ...userDetail,
       },
     });
     res.send(createdUser);
@@ -133,9 +134,43 @@ app.post('/create-user', async (req: Request, res: Response) => {
     res.send(JSON.stringify(e));
   }
 });
+// SIGN-IN USER
+app.get('/log-in', async (req: Request, res: Response) => {
+  const { userData } = req.body;
+  const email: string = userData.email;
+  const password: string = userData.password;
+
+  try {
+    if (!email && !password) {
+      res.send('Please enter email and password');
+      return;
+    } else if (!email || !password) {
+      res.send('Both email and password are required');
+      return;
+    }
+
+    const user = await prisma.user.findUnique({
+      where: {
+        email: email,
+      },
+    });
+
+    if (user) {
+      const isMatch = await bcrypt.compare(password, user.password);
+      if (isMatch) {
+        res.send(user);
+      } else {
+        res.send('Incorrect password');
+      }
+    } else {
+      res.send('User not found');
+    }
+  } catch (e) {
+    res.send(JSON.stringify(e));
+  }
+});
 
 // Get Single User
-
 app.get('/single-user/:id', async (req: Request, res: Response) => {
   const userId: string = req.params.id;
   try {
@@ -166,7 +201,6 @@ app.delete('/delete-user/:id', async (req: Request, res: Response) => {
 });
 
 // Edit User
-
 app.put('/edit-user/:id', async (req: Request, res: Response) => {
   const { updatedUser } = req.body;
   const userId: string = req.params.id;

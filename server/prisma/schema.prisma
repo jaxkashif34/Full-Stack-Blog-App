@@ -17,6 +17,7 @@ model User {
   email            String?          @unique
   role             Role             @default(BASIC)
   age              Int
+  password         String           @unique
   writterPost      Post[]           @relation("WrittenPost")
   favoritePost     Post[]
   userPreferences  UserPreferences? @relation(fields: [userPreferenceId], references: [id])
