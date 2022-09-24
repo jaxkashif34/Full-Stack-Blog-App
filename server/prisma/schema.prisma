@@ -16,7 +16,9 @@ model User {
   name             String
   email            String?          @unique
   role             Role             @default(BASIC)
-  age              Int
+  age              Int?
+  profile_url      String?
+  date_of_birth    DateTime?
   password         String           @unique
   writterPost      Post[]           @relation("WrittenPost")
   favoritePost     Post[]
@@ -29,7 +31,7 @@ model User {
 
 model UserPreferences {
   id           String  @id @default(uuid())
-  emailUpdates Boolean
+  emailUpdates Boolean @default(false)
   user         User?
 }
 
@@ -39,6 +41,7 @@ model Post {
   content    String
   createdAt  DateTime   @default(now())
   updatedAt  DateTime   @updatedAt
+  bg_image   String?
   auther     User       @relation("WrittenPost", fields: [autherId], references: [id])
   autherId   String
   favoriteBy User[]

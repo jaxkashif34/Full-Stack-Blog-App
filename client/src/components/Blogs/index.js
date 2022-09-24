@@ -1,0 +1,22 @@
+import React from 'react';
+import { Container, Grid } from '@mui/material';
+import GridCard from '../GridCard';
+import { useSelector } from 'react-redux';
+const Blogs = () => {
+  const { posts } = useSelector((state) => state.UIFeatures);
+  return (
+    <Container maxWidth="lg" sx={{ mt: 5, mb: 5 }}>
+      <Grid container spacing={3}>
+        {posts.map((post, index) => {
+          return (
+            <Grid item xs={12} md={6} lg={3} key={post.id}>
+              <GridCard post={post} />
+            </Grid>
+          );
+        })}
+      </Grid>
+    </Container>
+  );
+};
+
+export default Blogs;

@@ -1,29 +1,27 @@
 import express, { Express, Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
+import cors from 'cors';
 import bcrypt from 'bcrypt';
 require('dotenv').config();
 const prisma = new PrismaClient();
 const app: Express = express();
-
+app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// const main = async () => {
-//   const post = await prisma.post.findMany({
-//     where: {
-//       autherId: '207206e2-ace1-4bb3-9d9e-102d0bb5d7d8',
-//     },
-//   });
-//   console.log(post);
-// };
-
-// main();
-
 // ******************** POSTS ********************
-app.get('/', async (req: Request, res: Response) => {
+app.get('/all-posts-titles', async (req: Request, res: Response) => {
   try {
-    const allPosts = await prisma.post.findMany();
-    res.json(allPosts);
+    const allPosts = await prisma.post.findMany({
+      select: {
+        title: true,
+        id: true,
+        createdAt: true,
+        bg_image: true,
+        autherId: true,
+      },
+    });
+    res.send(allPosts);
   } catch (e) {
     res.send(JSON.stringify(e));
   }
@@ -208,6 +206,8 @@ app.put('/edit-user/:id', async (req: Request, res: Response) => {
   const email: string = updatedUser.email;
   const age: number = updatedUser.age;
   const role = updatedUser.role;
+  const password: string = updatedUser.password;
+  const hashedPassword = await bcrypt.hash(password, 10);
 
   try {
     const editedUser = await prisma.user.update({
@@ -219,6 +219,7 @@ app.put('/edit-user/:id', async (req: Request, res: Response) => {
         email,
         age,
         role,
+        password: hashedPassword,
       },
     });
 
@@ -229,4 +230,4 @@ app.put('/edit-user/:id', async (req: Request, res: Response) => {
 });
 
 const PORT = process.env.PORT;
-app.listen(PORT, () => console.log(`⚡️ Server is running at https://localhost:${PORT}`));
+app.listen(PORT, () => console.log(`⚡️ Server is up on https://localhost:${PORT}`));
