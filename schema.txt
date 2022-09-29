@@ -1,0 +1,67 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               String           @id @default(uuid())
+  name             String
+  email            String?          @unique
+  role             Role             @default(BASIC)
+  age              Int?
+  profile_url      String?
+  date_of_birth    DateTime?
+  password         String           @unique
+  writterPost      Post[]           @relation("WrittenPost")
+  favoritePost     Post[]
+  userPreferences  UserPreferences? @relation(fields: [userPreferenceId], references: [id])
+  userPreferenceId String?          @unique
+
+  @@unique([name, email])
+  @@index([email])
+}
+
+model UserPreferences {
+  id           String  @id @default(uuid())
+  emailUpdates Boolean @default(false)
+  user         User?
+}
+
+model Post {
+  id         String     @id @default(uuid())
+  title      String
+  content    String
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  bg_image   String?
+  auther     User       @relation("WrittenPost", fields: [autherId], references: [id])
+  autherId   String
+  favoriteBy User[]
+  categories Categoty[]
+  tags       String[] // need to figure out that how we will store unique items in scalar list
+}
+
+model Categoty {
+  id    String       @id @default(uuid())
+  name  categoryRole @unique @default(General)
+  posts Post[]
+}
+
+enum categoryRole {
+  Programming
+  General
+  Memes
+}
+
+enum Role {
+  BASIC
+  ADMIN
+}

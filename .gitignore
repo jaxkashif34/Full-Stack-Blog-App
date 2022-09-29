@@ -1,5 +1,4 @@
+/node_modules
 /client/node_modules
 /client/.env
-/server/node_modules
-/server/.env
-/server/prisma
+/.env

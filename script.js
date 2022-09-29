@@ -1,16 +1,18 @@
-import express, { Express, Request, Response } from 'express';
-import { PrismaClient } from '@prisma/client';
-import cors from 'cors';
-import bcrypt from 'bcrypt';
+const express = require('express');
+const { PrismaClient } = require('@prisma/client');
+const cors = require('cors');
+const bcrypt = require('bcrypt');
 require('dotenv').config();
+const upload = require('./middleware');
+const { cloudinary, options } = require('./config');
 const prisma = new PrismaClient();
-const app: Express = express();
+const app = express();
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 // ******************** POSTS ********************
-app.get('/all-posts-titles', async (req: Request, res: Response) => {
+app.get('/all-posts-titles', async (req, res) => {
   try {
     const allPosts = await prisma.post.findMany({
       select: {
@@ -27,32 +29,58 @@ app.get('/all-posts-titles', async (req: Request, res: Response) => {
   }
 });
 // create a post
-app.post('/create-post', async (req: Request, res: Response) => {
+app.post('/create-post', upload, async (req, res) => {
+  const file = req.file;
   const { postData } = req.body;
-  const title: string = postData.title;
-  const content: string = postData.content;
-  const userId: string = postData.userId;
-  const tags: string[] = postData.tags;
-  try {
-    const createdPost = await prisma.post.create({
-      data: {
-        title,
-        content,
-        tags,
-        auther: {
-          connect: {
-            id: userId,
-          },
-        },
-      },
+  const { title, content, userId, tags } = postData;
+
+  const uploadToCloudinary = () => {
+    return new Promise((resolve, reject) => {
+      try {
+        cloudinary.uploader.upload(file.path, options, (err, result) => {
+          if (err) {
+            reject(err);
+            res.send(`failed to upload ${file.originalname}`);
+          }
+          if (result) {
+            console.log('result', result);
+            resolve(result);
+          }
+        });
+      } catch (e) {
+        reject(e);
+        res.send(`file upload failed ${e.message}`);
+      }
     });
-    res.send(createdPost);
-  } catch (e) {
-    res.send(JSON.stringify(e));
-  }
+  };
+
+  uploadToCloudinary
+    .then((result) => {
+      console.log('success', result);
+    })
+    .catch((err) => {
+      console.log('error', err);
+    });
+  // try {
+  //   const createdPost = await prisma.post.create({
+  //     data: {
+  //       title,
+  //       content,
+  //       tags,
+  //       auther: {
+  //         connect: {
+  //           id: userId,
+  //         },
+  //       },
+  //     },
+  //   });
+  //   res.send(createdPost);
+  // } catch (e) {
+  //   res.send(JSON.stringify(e));
+  // }
 });
 // fetching single post
-app.get('/single-post/:id', async (req: Request, res: Response) => {
+app.get('/single-post/:id', async (req, res) => {
   const postId: string = req.params.id;
   try {
     const singlePost = await prisma.post.findUnique({
@@ -67,7 +95,7 @@ app.get('/single-post/:id', async (req: Request, res: Response) => {
 });
 
 // Delete post
-app.delete('/delete-post/:id', async (req: Request, res: Response) => {
+app.delete('/delete-post/:id', async (req, res) => {
   const postId: string = req.params.id;
   try {
     await prisma.post.delete({
@@ -82,7 +110,7 @@ app.delete('/delete-post/:id', async (req: Request, res: Response) => {
 });
 
 // Edit post
-app.put('/edit-post/:id', async (req: Request, res: Response) => {
+app.put('/edit-post/:id', async (req, res) => {
   const { updatedPost } = req.body;
   const postId: string = req.params.id;
   const title: string = updatedPost.title;
@@ -108,7 +136,7 @@ app.put('/edit-post/:id', async (req: Request, res: Response) => {
 });
 // ******************** USER ********************
 // SIGN-IN USER
-app.post('/sign-up', async (req: Request, res: Response) => {
+app.post('/sign-up', async (req, res) => {
   const { userData } = req.body;
   const name: string = userData.name;
   const age: number = userData.age;
@@ -133,7 +161,7 @@ app.post('/sign-up', async (req: Request, res: Response) => {
   }
 });
 // SIGN-IN USER
-app.get('/log-in', async (req: Request, res: Response) => {
+app.get('/log-in', async (req, res) => {
   const { userData } = req.body;
   const email: string = userData.email;
   const password: string = userData.password;
@@ -169,7 +197,7 @@ app.get('/log-in', async (req: Request, res: Response) => {
 });
 
 // Get Single User
-app.get('/single-user/:id', async (req: Request, res: Response) => {
+app.get('/single-user/:id', async (req, res) => {
   const userId: string = req.params.id;
   try {
     const user = await prisma.user.findUnique({
@@ -184,7 +212,7 @@ app.get('/single-user/:id', async (req: Request, res: Response) => {
 });
 
 // Delete a User
-app.delete('/delete-user/:id', async (req: Request, res: Response) => {
+app.delete('/delete-user/:id', async (req, res) => {
   const userId: string = req.params.id;
   try {
     await prisma.user.delete({
@@ -199,7 +227,7 @@ app.delete('/delete-user/:id', async (req: Request, res: Response) => {
 });
 
 // Edit User
-app.put('/edit-user/:id', async (req: Request, res: Response) => {
+app.put('/edit-user/:id', async (req, res) => {
   const { updatedUser } = req.body;
   const userId: string = req.params.id;
   const name: string = updatedUser.name;
