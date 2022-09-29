@@ -4,14 +4,15 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon index.js",
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jaxkashif34/blog-app.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "Kashif Ali",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/jaxkashif34/blog-app/issues"

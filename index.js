@@ -3,13 +3,39 @@ const { PrismaClient } = require('@prisma/client');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
 require('dotenv').config();
-const upload = require('./middleware');
-const { cloudinary, options } = require('./config');
+const upload = require('./server/middleware');
+const { cloudinary, options } = require('./server/config');
 const prisma = new PrismaClient();
 const app = express();
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
+// const main = async () => {
+//   const createPost = await prisma.post.create({
+//     data: {
+//       title: 'This is test title',
+//       content: 'This is test content',
+//       autherId: '4593c1ff-4ce8-49b1-a0d0-e8b5be6bd82c',
+//       tags: ['new', 'test'],
+//       bg_image:{
+//         c
+//       }
+//     },
+//   });
+//   // const createUser = await prisma.user.create({
+//   //   data: {
+//   //     name: 'Shair Ali',
+//   //     age: 25,
+//   //     password: 'This is test password',
+//   //     date_of_birth: new Date(),
+//   //     email: 'test@example.com',
+//   //     writterPost:{
+
+//   //     }
+//   //   },
+//   // });
+// };
 
 // ******************** POSTS ********************
 app.get('/all-posts-titles', async (req, res) => {
@@ -31,57 +57,62 @@ app.get('/all-posts-titles', async (req, res) => {
 // create a post
 app.post('/create-post', upload, async (req, res) => {
   const file = req.file;
-  const { postData } = req.body;
-  const { title, content, userId, tags } = postData;
+  const { title, content, autherId, tags } = req.body;
+  const tagsArr = JSON.parse(tags);
+  // const { title, content, autherId, tags } = postData;
 
   const uploadToCloudinary = () => {
     return new Promise((resolve, reject) => {
-      try {
-        cloudinary.uploader.upload(file.path, options, (err, result) => {
-          if (err) {
-            reject(err);
-            res.send(`failed to upload ${file.originalname}`);
-          }
-          if (result) {
-            console.log('result', result);
-            resolve(result);
-          }
-        });
-      } catch (e) {
-        reject(e);
-        res.send(`file upload failed ${e.message}`);
-      }
+      cloudinary.uploader.upload(file.path, options, (err, result) => {
+        if (err) {
+          reject(err);
+          res.send(`failed to upload ${file.originalname}`);
+        }
+        if (result) {
+          resolve(result);
+        }
+      });
     });
   };
 
-  uploadToCloudinary
-    .then((result) => {
-      console.log('success', result);
+  uploadToCloudinary()
+    .then(async (result) => {
+      const imgObj = {
+        width: result.width,
+        height: result.height,
+        asset_id: result.asset_id,
+        created_at: result.created_at,
+        bytes: result.bytes,
+        secure_url: result.secure_url,
+        original_filename: result.original_filename,
+      };
+
+      const createdPost = await prisma.post.create({
+        data: {
+          title,
+          content,
+          autherId,
+          tags: tagsArr,
+          bg_image: {
+            create: {
+              ...imgObj,
+            },
+          },
+        },
+        include: {
+          bg_image: true,
+        },
+      });
+
+      res.send({ message: 'Post created successfully', data: createdPost });
     })
     .catch((err) => {
-      console.log('error', err);
+      res.status(400).send({ message: 'Error in saving data into database', error: err });
     });
-  // try {
-  //   const createdPost = await prisma.post.create({
-  //     data: {
-  //       title,
-  //       content,
-  //       tags,
-  //       auther: {
-  //         connect: {
-  //           id: userId,
-  //         },
-  //       },
-  //     },
-  //   });
-  //   res.send(createdPost);
-  // } catch (e) {
-  //   res.send(JSON.stringify(e));
-  // }
 });
 // fetching single post
 app.get('/single-post/:id', async (req, res) => {
-  const postId: string = req.params.id;
+  const postId = req.params.id;
   try {
     const singlePost = await prisma.post.findUnique({
       where: {
@@ -96,7 +127,7 @@ app.get('/single-post/:id', async (req, res) => {
 
 // Delete post
 app.delete('/delete-post/:id', async (req, res) => {
-  const postId: string = req.params.id;
+  const postId = req.params.id;
   try {
     await prisma.post.delete({
       where: {
@@ -112,10 +143,10 @@ app.delete('/delete-post/:id', async (req, res) => {
 // Edit post
 app.put('/edit-post/:id', async (req, res) => {
   const { updatedPost } = req.body;
-  const postId: string = req.params.id;
-  const title: string = updatedPost.title;
-  const content: string = updatedPost.content;
-  const tags: string[] = updatedPost.tags;
+  const postId = req.params.id;
+  const title = updatedPost.title;
+  const content = updatedPost.content;
+  const tags = updatedPost.tags;
   try {
     const editedPost = await prisma.post.update({
       where: {
@@ -135,18 +166,16 @@ app.put('/edit-post/:id', async (req, res) => {
   }
 });
 // ******************** USER ********************
-// SIGN-IN USER
+// SIGN-UP USER
 app.post('/sign-up', async (req, res) => {
   const { userData } = req.body;
-  const name: string = userData.name;
-  const age: number = userData.age;
-  const email: string = userData.email;
-  const password: string = userData.password;
+  const { name, age, email, password, role } = userData;
   const hashedPassword = await bcrypt.hash(password, 10);
   const userDetail = {
     name,
     age,
     email,
+    role,
     password: hashedPassword,
   };
   try {
@@ -163,8 +192,8 @@ app.post('/sign-up', async (req, res) => {
 // SIGN-IN USER
 app.get('/log-in', async (req, res) => {
   const { userData } = req.body;
-  const email: string = userData.email;
-  const password: string = userData.password;
+  const email = userData.email;
+  const password = userData.password;
 
   try {
     if (!email && !password) {
@@ -198,7 +227,7 @@ app.get('/log-in', async (req, res) => {
 
 // Get Single User
 app.get('/single-user/:id', async (req, res) => {
-  const userId: string = req.params.id;
+  const userId = req.params.id;
   try {
     const user = await prisma.user.findUnique({
       where: {
@@ -213,7 +242,7 @@ app.get('/single-user/:id', async (req, res) => {
 
 // Delete a User
 app.delete('/delete-user/:id', async (req, res) => {
-  const userId: string = req.params.id;
+  const userId = req.params.id;
   try {
     await prisma.user.delete({
       where: {
@@ -229,12 +258,12 @@ app.delete('/delete-user/:id', async (req, res) => {
 // Edit User
 app.put('/edit-user/:id', async (req, res) => {
   const { updatedUser } = req.body;
-  const userId: string = req.params.id;
-  const name: string = updatedUser.name;
-  const email: string = updatedUser.email;
-  const age: number = updatedUser.age;
+  const userId = req.params.id;
+  const name = updatedUser.name;
+  const email = updatedUser.email;
+  const age = updatedUser.age;
   const role = updatedUser.role;
-  const password: string = updatedUser.password;
+  const password = updatedUser.password;
   const hashedPassword = await bcrypt.hash(password, 10);
 
   try {

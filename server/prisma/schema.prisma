@@ -41,12 +41,25 @@ model Post {
   content    String
   createdAt  DateTime   @default(now())
   updatedAt  DateTime   @updatedAt
-  bg_image   String?
+  bg_image   Bg_Image?
   auther     User       @relation("WrittenPost", fields: [autherId], references: [id])
   autherId   String
   favoriteBy User[]
   categories Categoty[]
   tags       String[] // need to figure out that how we will store unique items in scalar list
+}
+
+model Bg_Image {
+  id                String @id @default(uuid())
+  width             Int    @default(700)
+  height            Int    @default(700)
+  asset_id          String
+  created_at        String
+  bytes             Int
+  secure_url        String
+  original_filename String
+  post              Post   @relation(fields: [post_id], references: [id])
+  post_id           String @unique
 }
 
 model Categoty {
