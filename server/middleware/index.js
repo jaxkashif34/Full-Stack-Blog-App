@@ -10,10 +10,14 @@ const allowedFiles = {
 const upload = multer({
   storage: multer.diskStorage({
     destination: (req, file, cb) => {
-      cb(null, `${path.join(path.dirname(__dirname), 'uploads')}`);
+      if (file.fieldname === 'bg_image') {
+        cb(null, `${path.join(path.dirname(__dirname), 'uploads/bg_image')}`);
+      } else if (file.fieldname === 'profile_pic') {
+        cb(null, `${path.join(path.dirname(__dirname), 'uploads/profile_pic')}`);
+      }
     },
     filename: (req, file, cb) => {
-      cb(null, `${file.originalname}- ${file.fieldname}- ${Date.now()}-${file.mimetype.split('/')[1]}`);
+      cb(null, `${file.originalname}-${Date.now()}-${file.fieldname}`);
     },
   }),
   fileFilter: (req, file, cb) => {
@@ -23,6 +27,6 @@ const upload = multer({
     }
     cb(null, true);
   },
-}).single('bg_image');
+});
 
-module.exports = upload;
+module.exports = { upload };

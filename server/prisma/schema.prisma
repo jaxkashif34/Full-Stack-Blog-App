@@ -17,7 +17,7 @@ model User {
   email            String?          @unique
   role             Role             @default(BASIC)
   age              Int?
-  profile_url      String?
+  profile_pic      Profile_pic?
   date_of_birth    DateTime?
   password         String           @unique
   writterPost      Post[]           @relation("WrittenPost")
@@ -27,6 +27,19 @@ model User {
 
   @@unique([name, email])
   @@index([email])
+}
+
+model Profile_pic {
+  id                String @id @default(uuid())
+  width             Int    @default(700)
+  height            Int    @default(700)
+  asset_id          String
+  created_at        String
+  bytes             Int
+  secure_url        String
+  original_filename String
+  user              User?   @relation(fields: [user_id], references: [id])
+  user_id           String? @unique
 }
 
 model UserPreferences {
