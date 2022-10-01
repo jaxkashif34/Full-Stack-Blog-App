@@ -10,6 +10,8 @@ const initialState = {
   anchorElNav: false,
   posts: [],
   status: '',
+  showPassword: false,
+  role: 'AUTHER',
 };
 
 export const UIFeaturesSlice = createSlice({
@@ -21,6 +23,12 @@ export const UIFeaturesSlice = createSlice({
     },
     setAnchorElNav: (state, { payload }) => {
       state.anchorElNav = payload;
+    },
+    setShowPassword: (state, { payload }) => {
+      state.showPassword = payload;
+    },
+    setRole: (state, { payload }) => {
+      state.role = payload;
     },
   },
   extraReducers: (builder) => {
@@ -37,6 +45,5 @@ export const UIFeaturesSlice = createSlice({
   },
 });
 
-export const { setDarkMode, setAnchorElNav } = UIFeaturesSlice.actions;
-
+export const { setDarkMode, setAnchorElNav, setShowPassword, setRole } = UIFeaturesSlice.actions;
 export const UIFeaturesSliceReducer = UIFeaturesSlice.reducer;

@@ -1,22 +1,10 @@
 import React from 'react';
-import { Box, IconButton } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import { IconButton } from '@mui/material';
 import { DarkMode, LightMode, ExpandLess } from '@mui/icons-material';
 import { setDarkMode } from '../../store/UI-Features';
 import { useDispatch, useSelector } from 'react-redux';
 import useDarkMode from '../../assets/mode';
 
-const BottomBarStyles = styled(Box)(({ theme }) => {
-  return {
-    position: 'fixed',
-    bottom: 15,
-    backgroundColor: 'transparent',
-    width: '100%',
-    display: 'flex',
-    justifyContent: 'space-between',
-    padding: '0.4rem 2rem',
-  };
-});
 const BottomBar = () => {
   const { isDark } = useSelector((state) => state.UIFeatures);
   const dispatch = useDispatch();
@@ -32,14 +20,14 @@ const BottomBar = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
   return (
-    <BottomBarStyles>
-      <IconButton size="large" color="primary" onClick={handleMode}>
+    <>
+      <IconButton size="large" color="primary" onClick={handleMode} sx={{ position: 'fixed', bottom: '1rem', left: '1rem' }}>
         {isDark ? <LightMode /> : <DarkMode />}
       </IconButton>
-      <IconButton size="large" color="primary" onClick={scrollToTop}>
+      <IconButton size="large" color="primary" onClick={scrollToTop} sx={{ position: 'fixed', bottom: '1rem', right: '1rem' }}>
         <ExpandLess fontSize="20" />
       </IconButton>
-    </BottomBarStyles>
+    </>
   );
 };
 

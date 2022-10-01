@@ -15,8 +15,7 @@ model User {
   id               String           @id @default(uuid())
   name             String
   email            String?          @unique
-  role             Role             @default(BASIC)
-  age              Int?
+  role             Role             @default(AUTHER)
   profile_pic      Profile_pic?
   date_of_birth    DateTime?
   password         String           @unique
@@ -30,9 +29,9 @@ model User {
 }
 
 model Profile_pic {
-  id                String @id @default(uuid())
-  width             Int    @default(700)
-  height            Int    @default(700)
+  id                String  @id @default(uuid())
+  width             Int     @default(700)
+  height            Int     @default(700)
   asset_id          String
   created_at        String
   bytes             Int
@@ -88,6 +87,6 @@ enum categoryRole {
 }
 
 enum Role {
-  BASIC
+  AUTHER
   ADMIN
 }

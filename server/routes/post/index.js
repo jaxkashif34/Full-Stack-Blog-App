@@ -64,11 +64,10 @@ const createPost = async (req, res) => {
 
 const createUser = async (req, res) => {
   const file = req.file;
-  const { name, age, email, password, role, date_of_birth } = req.body;
+  const { name, email, password, role, date_of_birth } = req.body;
   const hashedPassword = await bcrypt.hash(password, 10);
   const userDatails = {
     name,
-    age: Number(age),
     email,
     role,
     date_of_birth: new Date(date_of_birth),

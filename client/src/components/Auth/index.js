@@ -1,9 +1,13 @@
-import React from 'react'
-
+import React from 'react';
+import { Box } from '@mui/material';
+import { Outlet } from 'react-router-dom';
+import 'react-datepicker/dist/react-datepicker.css';
 const Auth = () => {
   return (
-    <div>Auth</div>
-  )
-}
+    <Box sx={{ my: 3 }}>
+      <Outlet />
+    </Box>
+  );
+};
 
-export default Auth
+export default Auth;

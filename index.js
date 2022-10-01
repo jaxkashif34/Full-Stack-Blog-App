@@ -53,7 +53,7 @@ app.delete('/delete-post/:id', deletePost);
 app.put('/edit-post/:id', editPost);
 // ******************** USER ********************
 // SIGN-UP USER
-app.post('/sign-up', upload.single("profile_pic"), createUser);
+app.post('/sign-up', upload.single('profile_pic'), createUser);
 // SIGN-IN USER
 app.post('/log-in', loginSignInUser);
 
@@ -65,6 +65,13 @@ app.delete('/delete-user/:id', deleteUser);
 
 // Edit User
 app.put('/edit-user/:id', editUser);
+
+app.post('/profile_pic', upload.single('profile_pic'), (req, res) => {
+  const file = req.file;
+  if (file) {
+    res.send(file);
+  }
+});
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => console.log(`⚡️ Server is up on https://localhost:${PORT}`));
