@@ -14,8 +14,8 @@ const SnackBar = () => {
       onClose={() => dispatch(handleSnack({ message: '', isOpen: false }))}
       message={message}
       key={'first-snackbar'}
-      autoHideDuration={3000}
-      TransitionComponent={(props) => <Slide {...props} direction="up" />}
+      autoHideDuration={2000}
+      TransitionComponent={(props) => <Slide {...props} direction="down" />}
       action={
         <IconButton size="small" aria-label="close" color="inherit" onClick={() => dispatch(handleSnack({ message: '', isOpen: false }))}>
           <Close fontSize="small" />

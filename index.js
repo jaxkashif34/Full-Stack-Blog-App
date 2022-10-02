@@ -1,5 +1,3 @@
-const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
@@ -13,17 +11,17 @@ app.use(cors());
 app.use(express.json());
 
 // const main = async () => {
-//   //   const createPost = await prisma.post.create({
-//   //     data: {
-//   //       title: 'This is test title',
-//   //       content: 'This is test content',
-//   //       autherId: '4593c1ff-4ce8-49b1-a0d0-e8b5be6bd82c',
-//   //       tags: ['new', 'test'],
-//   //       bg_image:{
-//   //         c
-//   //       }
-//   //     },
-//   //   });
+//   const createPost = await prisma.post.create({
+//     data: {
+//       title: 'This is test title',
+//       content: 'This is test content',
+//       autherId: '4593c1ff-4ce8-49b1-a0d0-e8b5be6bd82c',
+//       tags: ['new', 'test'],
+//       bg_image:{
+//         c
+//       }
+//     },
+//   });
 //   const createUser = await prisma.user.create({
 //     data: {
 //       name: 'Shair Ali',
@@ -31,6 +29,11 @@ app.use(express.json());
 //       password: 'kashif',
 //       date_of_birth: new Date(),
 //       email: 'test@example.com',
+//       userPreferences:{
+//         create:{
+//           emailUpdates
+//         }
+//       }
 //     },
 //   });
 

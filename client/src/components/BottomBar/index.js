@@ -3,16 +3,12 @@ import { IconButton } from '@mui/material';
 import { DarkMode, LightMode, ExpandLess } from '@mui/icons-material';
 import { setDarkMode } from '../../store/UI-Features';
 import { useDispatch, useSelector } from 'react-redux';
-import useDarkMode from '../../assets/mode';
 
 const BottomBar = () => {
   const { isDark } = useSelector((state) => state.UIFeatures);
   const dispatch = useDispatch();
 
-  const [isDarkInStore, setDarkModeInStore] = useDarkMode();
-
   const handleMode = () => {
-    setDarkModeInStore(!isDarkInStore);
     dispatch(setDarkMode(isDark));
   };
 

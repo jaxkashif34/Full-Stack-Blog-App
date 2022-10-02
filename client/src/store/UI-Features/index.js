@@ -5,9 +5,12 @@ export const getPosts = createAsyncThunk('post/getPosts', async () => {
   const response = await axios.get('http://localhost:8000/all-posts-titles');
   return response.data;
 });
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+  const osTheme = e.matches;
+  setDarkMode(osTheme);
+});
 const initialState = {
-  isDark: JSON.parse(localStorage.getItem('dark-mode')),
-  anchorElNav: false,
+  isDark: true,
   posts: [],
   status: '',
   showPassword: false,
@@ -15,6 +18,7 @@ const initialState = {
     message: '',
     isOpen: false,
   },
+  isUserMenuOpen: false,
 };
 
 export const UIFeaturesSlice = createSlice({
@@ -24,14 +28,14 @@ export const UIFeaturesSlice = createSlice({
     setDarkMode: (state, { payload }) => {
       state.isDark = !payload;
     },
-    setAnchorElNav: (state, { payload }) => {
-      state.anchorElNav = payload;
-    },
     setShowPassword: (state, { payload }) => {
       state.showPassword = payload;
     },
     handleSnack: (state, { payload }) => {
       state.snack = payload;
+    },
+    handleUserMenu: (state, { payload }) => {
+      state.isUserMenuOpen = payload;
     },
   },
   extraReducers: (builder) => {
@@ -48,5 +52,5 @@ export const UIFeaturesSlice = createSlice({
   },
 });
 
-export const { setDarkMode, setAnchorElNav, setShowPassword,handleSnack } = UIFeaturesSlice.actions;
+export const { setDarkMode, setShowPassword, handleSnack, handleUserMenu } = UIFeaturesSlice.actions;
 export const UIFeaturesSliceReducer = UIFeaturesSlice.reducer;

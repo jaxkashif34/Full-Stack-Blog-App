@@ -11,9 +11,13 @@ const persistorConfig = {
   whitelist: ['auth'],
   stateReconciler: autoMergeLevel2,
 };
-
+const UIPersistorConfig = {
+  key: 'isDark',
+  storage,
+  whitelist: ['isDark'],
+};
 const rootReducer = combineReducers({
-  UIFeatures: UIFeaturesSliceReducer,
+  UIFeatures: persistReducer(UIPersistorConfig, UIFeaturesSliceReducer),
   auth: userSliceReducer,
 });
 

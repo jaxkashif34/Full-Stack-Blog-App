@@ -64,7 +64,7 @@ const createPost = async (req, res) => {
 
 const createUser = async (req, res) => {
   const file = req.file;
-  const { name, email, password, role, date_of_birth } = req.body;
+  const { name, email, password, role, date_of_birth, receive_email_updates } = req.body;
   const hashedPassword = await bcrypt.hash(password, 10);
   const userDatails = {
     name,
@@ -95,6 +95,11 @@ const createUser = async (req, res) => {
             profile_pic: {
               create: {
                 ...imgData,
+              },
+            },
+            userPreferences: {
+              create: {
+                emailUpdates: JSON.parse(receive_email_updates),
               },
             },
           },
@@ -136,10 +141,10 @@ const loginSignInUser = async (req, res) => {
 
   try {
     if (!email && !password) {
-      res.send('Please enter email and password');
+      res.json({ message: 'Please enter email and password' });
       return;
     } else if (!email || !password) {
-      res.send('Both email and password are required');
+      res.json({ message: 'Both email and password are required' });
       return;
     }
 
@@ -147,20 +152,23 @@ const loginSignInUser = async (req, res) => {
       where: {
         email: email,
       },
+      include: {
+        profile_pic: true,
+      },
     });
 
     if (user) {
       const isMatch = await bcrypt.compare(password, user.password);
       if (isMatch) {
-        res.send(user);
+        res.json({ message: 'Login successfully', data: user });
       } else {
-        res.send('Incorrect password');
+        res.json({ message: 'Incorrect password' });
       }
     } else {
-      res.send('User not found');
+      res.json({ message: 'User not found' });
     }
   } catch (e) {
-    res.send(JSON.stringify(e));
+    res.json({ message: JSON.stringify(e) });
   }
 };
 

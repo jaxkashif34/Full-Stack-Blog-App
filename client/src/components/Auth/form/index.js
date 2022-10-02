@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Formik, Field, Form } from 'formik';
 import { Stack, Box, TextField, Avatar, FormControl, InputLabel, Select, MenuItem, Grid, Checkbox, FormControlLabel, IconButton } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
-import { initialValue, validationSchema } from '../utils';
+import { signUpInitial, signUpValidation, signInInitial, signInValidation } from '../utils';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import Axios from 'axios';
 import { setShowPassword, handleSnack } from '../../../store/UI-Features';
@@ -22,21 +22,46 @@ const AuthForm = ({ form }) => {
     };
   };
 
+  const validationSchema = form === 'signup' ? signUpValidation : signInValidation;
+  const initialValues = form === 'signup' ? signUpInitial : signInInitial;
+
   const onSubmit = async (values, actions) => {
     const data = new FormData();
-    if (profile_pic.file !== null) {
-      const uploadedData = {
-        ...values,
-        profile_pic: profile_pic.file,
-      };
-      Object.keys(uploadedData).forEach((key) => {
-        data.append(key, uploadedData[key]);
-      });
+    if (form === 'signup') {
+      if (profile_pic.file !== null) {
+        const uploadedData = {
+          ...values,
+          profile_pic: profile_pic.file,
+        };
+        Object.keys(uploadedData).forEach((key) => {
+          data.append(key, uploadedData[key]);
+        });
 
+        Axios({
+          url: 'http://localhost:8000/sign-up',
+          method: 'POST',
+          data,
+        })
+          .then((response) => {
+            dispatch(setCurrentUser(response.data.data));
+            dispatch(handleSnack({ isOpen: true, message: response.data.message }));
+            navigate('/');
+          })
+          .catch((err) => {
+            dispatch(handleSnack({ isOpen: true, message: err.message }));
+          })
+          .finally(() => {
+            actions.setSubmitting(false);
+          });
+      } else {
+        dispatch(handleSnack({ isOpen: true, message: 'Please select a profile picture' }));
+        actions.setSubmitting(false);
+      }
+    } else if (form === 'signin') {
       Axios({
-        url: 'http://localhost:8000/sign-up',
+        url: 'http://localhost:8000/log-in',
         method: 'POST',
-        data,
+        data: values,
       })
         .then((response) => {
           dispatch(setCurrentUser(response.data.data));
@@ -49,14 +74,11 @@ const AuthForm = ({ form }) => {
         .finally(() => {
           actions.setSubmitting(false);
         });
-    } else {
-      dispatch(handleSnack({ isOpen: true, message: 'Please select a profile picture' }));
-      actions.setSubmitting(false);
     }
   };
   return (
     <Box sx={{ width: { xs: '100%', md: '60%' }, mx: 'auto', py: 1, px: 2 }}>
-      <Formik initialValues={initialValue} validationSchema={validationSchema} onSubmit={onSubmit}>
+      <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit}>
         {(formik) => {
           const { touched, errors, handleChange } = formik;
           const isValidEmail = touched.email && !!errors.email;
