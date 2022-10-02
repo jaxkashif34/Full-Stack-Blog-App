@@ -8,15 +8,16 @@ import { Route, Routes } from 'react-router-dom';
 import Auth from './components/Auth';
 import SignUp from './components/Auth/SigUp';
 import SignIn from './components/Auth/SignIn';
+import SnackBar from './components/Snackbar';
 function App() {
-  const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(getPosts());
+    // dispatch(getPosts());
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <>
       <Nav />
+      <SnackBar />
       <Routes>
         <Route path="/" element={<Blogs />} />
         <Route path="/auth" element={<Auth />}>

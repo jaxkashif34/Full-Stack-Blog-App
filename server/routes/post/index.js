@@ -123,7 +123,7 @@ const createUser = async (req, res) => {
 
     saveInDabase(imgData)
       .then((result) => {
-        res.send({ message: 'User saved successfully', data: result });
+        res.send({ message: `Welcome ${name}`, data: result });
       })
       .catch((err) => {
         res.status(404).send({ message: 'Error in saving user', error: err });

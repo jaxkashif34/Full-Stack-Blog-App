@@ -9,6 +9,7 @@ const Nav = () => {
   const anchorRef = useRef(null);
   const dispatch = useDispatch();
   const { anchorElNav } = useSelector((state) => state.UIFeatures);
+  const { currentUser } = useSelector((state) => state.auth);
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
@@ -62,12 +63,12 @@ const Nav = () => {
             <Button color="inherit">LogOut</Button>
           </Box>
           <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="open settings" arrow placement="left-end">
+            <Tooltip title={currentUser?.name || 'User Profile'} arrow placement="left-end">
               <IconButton sx={{ p: 0 }}>
-                <Avatar alt="user profile" sx={{ width: { xs: 40, md: 45 }, height: { xs: 40, md: 45 } }}>
+                <Avatar src={currentUser?.profile_pic?.secure_url} alt={currentUser?.name} sx={{ width: { xs: 40, md: 45 }, height: { xs: 40, md: 45 } }}>
                   <IconButton component="label">
                     <input type="file" accept="image/*" hidden />
-                    <Person />
+                    {currentUser === null && <Person />}
                   </IconButton>
                 </Avatar>
               </IconButton>
