@@ -4,7 +4,7 @@ import { Container } from '@mui/system';
 import { Book, Person, Logout, ManageAccounts } from '@mui/icons-material';
 import { Link, Link as RouterLink } from 'react-router-dom';
 import { handleUserMenu } from '../../store/UI-Features';
-import { setCurrentUser, setEditedUser } from '../../store/Auth';
+import { setCurrentUser } from '../../store/Auth';
 import { useDispatch, useSelector } from 'react-redux';
 import storage from 'redux-persist/lib/storage';
 const Nav = () => {
@@ -44,7 +44,7 @@ const Nav = () => {
                 ref={anchorRefProfile}
                 src={currentUser?.profile_pic?.secure_url}
                 alt={currentUser?.name}
-                sx={{ width: { xs: 40, md: 45 }, height: { xs: 40, md: 45 } }}
+                sx={{ width: { xs: 40, md: 45 }, height: { xs: 40, md: 45 }, cursor: 'pointer' }}
                 onClick={() => currentUser !== null && dispatch(handleUserMenu(true))}>
                 <input type="file" accept="image/*" hidden />
                 {currentUser === null && <Person />}
@@ -62,7 +62,6 @@ const Nav = () => {
                   <MenuItem
                     onClick={() => {
                       dispatch(handleUserMenu(false));
-                      dispatch(setEditedUser(currentUser));
                     }}>
                     <ListItemIcon>
                       <ManageAccounts />

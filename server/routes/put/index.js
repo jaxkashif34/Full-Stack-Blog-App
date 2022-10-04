@@ -41,9 +41,9 @@ const editUser = async (req, res) => {
     emailUpdates: JSON.parse(emailUpdates),
   };
 
-  const uploadToCloudinary = () => {
+  const uploadToCloudinary = (path) => {
     return new Promise(async (resolve, reject) => {
-      await cloudinary.uploader.upload(file.path, options, (err, result) => {
+      await cloudinary.uploader.upload(path, options, (err, result) => {
         if (err) {
           reject(err);
         }
@@ -63,16 +63,19 @@ const editUser = async (req, res) => {
           },
           data: {
             ...editedUserData,
-
-            profile_pic: {
-              update: {
-                ...imgData,
+            ...(imgData != null && {
+              profile_pic: {
+                update: {
+                  ...imgData,
+                },
               },
+            }),
+          },
+          ...(imgData != null && {
+            include: {
+              profile_pic: true,
             },
-          },
-          include: {
-            profile_pic: true,
-          },
+          }),
         });
 
         resolve(updatedUser);
@@ -81,10 +84,11 @@ const editUser = async (req, res) => {
       }
     });
   };
-
-  uploadToCloudinary().then((result) => {
+  let imgData;
+  if (file != null) {
+    const result = await uploadToCloudinary(file.path);
     const { width, height, asset_id, created_at, bytes, secure_url, original_filename } = result;
-    const imgData = {
+    imgData = {
       width,
       height,
       asset_id,
@@ -93,14 +97,14 @@ const editUser = async (req, res) => {
       secure_url,
       original_filename,
     };
+  }
 
-    updateInDatabase(imgData)
-      .then((result) => {
-        res.json({ message: 'User updated successfully', data: result });
-      })
-      .catch((err) => {
-        res.json({ message: 'Error updating user', error: err });
-      });
-  });
+  updateInDatabase(imgData)
+    .then((result) => {
+      res.json({ message: 'User updated successfully', data: result });
+    })
+    .catch((err) => {
+      res.json({ message: 'Error updating user', error: err });
+    });
 };
 module.exports = { editPost, editUser };

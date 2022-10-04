@@ -1,28 +1,19 @@
 import React, { useState } from 'react';
-import { Formik, Field, Form } from 'formik';
-import { Stack, Box, TextField, Avatar, FormControl, InputLabel, Select, MenuItem, Grid, Checkbox, FormControlLabel, IconButton, Typography } from '@mui/material';
+import { Formik, Form } from 'formik';
+import { Stack, Box, Grid, Typography } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { signUpInitial, signUpValidation, signInInitial, signInValidation } from '../utils';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
 import Axios from 'axios';
-import { setShowPassword, handleSnack } from '../../../store/UI-Features';
+import { handleSnack } from '../../../store/UI-Features';
 import { setCurrentUser } from '../../../store/Auth';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
+import { UploadPic, NameField, EmailField, PasswordField, RoleField, DobField, CheckBox } from './components';
 const AuthForm = ({ form }) => {
+  const [profile_pic, setProfile_pic] = useState({ file: null, path: '' });
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { showPassword, isDark } = useSelector((state) => state.UIFeatures);
   const { currentUser } = useSelector((state) => state.auth);
-  const [profile_pic, setProfile_pi] = useState({ file: null, path: '' });
-  const handleChangeProfile = async (file) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onloadend = (e) => {
-      setProfile_pi({ file, path: reader.result });
-    };
-  };
-
   const validationSchema = form === 'signup' ? signUpValidation : form === 'editProfile' ? signUpValidation : signInValidation;
   const initialValues = form === 'signup' ? signUpInitial : form === 'editProfile' ? signUpInitial : signInInitial;
   const isFormSignUpOrEdit = form === 'signup' || form === 'editProfile';
@@ -33,11 +24,12 @@ const AuthForm = ({ form }) => {
         ...values,
         profile_pic: profile_pic.file,
       };
+      console.log(uploadedData);
       Object.keys(uploadedData).forEach((key) => {
         data.append(key, uploadedData[key]);
       });
-      if (profile_pic.file !== null) {
-        if (form === 'signup') {
+      if (form === 'signup') {
+        if (profile_pic.file !== null) {
           Axios({
             url: 'http://localhost:8000/sign-up',
             method: 'POST',
@@ -55,26 +47,26 @@ const AuthForm = ({ form }) => {
             .finally(() => {
               actions.setSubmitting(false);
             });
-        } else if (form === 'editProfile') {
-          // edit user code will goes here'
-          Axios({
-            url: `http://localhost:8000/edit-user/${currentUser?.id}`,
-            method: 'PUT',
-            data,
-          })
-            .then((response) => {
-              dispatch(setCurrentUser(response.data.data));
-              dispatch(handleSnack({ isOpen: true, message: response.data.message }));
-              navigate('/');
-            })
-            .catch((err) => {
-              dispatch(handleSnack({ isOpen: true, message: err.message }));
-              console.log(err);
-            });
+        } else {
+          dispatch(handleSnack({ isOpen: true, message: 'Please select a profile picture' }));
+          actions.setSubmitting(false);
         }
-      } else {
-        dispatch(handleSnack({ isOpen: true, message: 'Please select a profile picture' }));
-        actions.setSubmitting(false);
+      } else if (form === 'editProfile') {
+        // edit user code will goes here'
+        Axios({
+          url: `http://localhost:8000/edit-user/${currentUser?.id}`,
+          method: 'PUT',
+          data,
+        })
+          .then((response) => {
+            dispatch(setCurrentUser({ ...currentUser, ...response.data.data }));
+            dispatch(handleSnack({ isOpen: true, message: response.data.message }));
+            navigate('/');
+          })
+          .catch((err) => {
+            dispatch(handleSnack({ isOpen: true, message: err.message }));
+            console.log(err);
+          });
       }
     } else if (form === 'signin') {
       Axios({
@@ -100,67 +92,24 @@ const AuthForm = ({ form }) => {
       <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit}>
         {(formik) => {
           const { touched, errors, handleChange } = formik;
-          const isValidEmail = touched.email && !!errors.email;
-          const isValidPasswrod = touched.password && !!errors.password;
-          const isValidName = touched.name && !!errors.name;
-          const isValidDOB = touched.date_of_birth && !!errors.date_of_birth;
           return (
             <Form autoComplete="off" encType="multipart/form-data">
               <Stack spacing={3}>
-                {isFormSignUpOrEdit && (
-                  <Box>
-                    <Avatar component="label" htmlFor="profile_pic" src={profile_pic.path} alt="profile picture" sx={{ margin: 'auto', width: { xs: 60, md: 80 }, height: { xs: 60, md: 80 } }} />
-                    <input type="file" hidden id="profile_pic" name="profile_pic" onChange={(e) => handleChangeProfile(e.target.files[0])} />
-                  </Box>
-                )}
-                {isFormSignUpOrEdit && <Field error={isValidName} helperText={errors.name && errors.name} name="name" type="text" as={TextField} label="Full Name" size="small" variant="standard" />}
-                <Field name="email" error={isValidEmail} helperText={isValidEmail && errors.email} type="email" as={TextField} label="Email" size="small" variant="standard" />
-                <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
-                  <Field
-                    name="password"
-                    error={isValidPasswrod}
-                    helperText={isValidPasswrod && errors.password}
-                    type={showPassword ? 'text' : 'password'}
-                    as={TextField}
-                    label="Password"
-                    size="small"
-                    variant="standard"
-                    fullWidth
-                  />
-                  <IconButton disableRipple onClick={() => dispatch(setShowPassword(!showPassword))}>
-                    {showPassword ? <Visibility /> : <VisibilityOff />}
-                  </IconButton>
-                </Box>
+                {isFormSignUpOrEdit && <UploadPic profile_pic={profile_pic} setProfile_pic={setProfile_pic} />}
+                {isFormSignUpOrEdit && <NameField data={{ errors, touched }} />}
+                <EmailField data={{ touched, errors }} />
+                <PasswordField data={{ touched, errors }} />
                 {isFormSignUpOrEdit && (
                   <Grid container alignItems="center">
                     <Grid item xs={6} md={6}>
-                      <FormControl variant="standard" sx={{ minWidth: 120 }}>
-                        <InputLabel id="role">Role</InputLabel>
-                        <Field component={Select} defaultValue="AUTHER" label="Role" id="role" name="role" onChange={handleChange} disabled>
-                          <MenuItem component="option" value="ADMIN" disabled>
-                            Admin
-                          </MenuItem>
-                          <MenuItem component="option" value="AUTHER">
-                            Auther
-                          </MenuItem>
-                        </Field>
-                      </FormControl>
+                      <RoleField handleChange={handleChange} />
                     </Grid>
                     <Grid item xs={6} md={6}>
-                      <Field
-                        error={isValidDOB}
-                        helperText={isValidDOB && "Date of birth can't be empty"}
-                        component={TextField}
-                        name="date_of_birth"
-                        id="date_of_birth"
-                        type="date"
-                        onChange={handleChange}
-                        style={{ colorScheme: `${isDark ? 'dark' : 'white'}` }}
-                      />
+                      <DobField data={{ touched, errors, handleChange }} />
                     </Grid>
                   </Grid>
                 )}
-                {isFormSignUpOrEdit && <FormControlLabel control={<Checkbox name="emailUpdates" onChange={handleChange} />} label="receive email updates ?" />}
+                {isFormSignUpOrEdit && <CheckBox data={{ handleChange }} />}
                 <LoadingButton variant="contained" disabled={formik.isSubmitting} type="submit" fullWidth loading={formik.isSubmitting}>
                   {form === 'signup' ? "Let's Go" : form === 'signin' ? 'Sign In' : 'update'}
                 </LoadingButton>
