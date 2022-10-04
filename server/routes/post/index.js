@@ -2,12 +2,7 @@ const bcrypt = require('bcrypt');
 const { PrismaClient } = require('@prisma/client');
 const { cloudinary } = require('../../config');
 const prisma = new PrismaClient();
-const options = {
-  use_filename: true,
-  unique_filename: false,
-  overwrite: true,
-};
-
+const { options } = require('../../config');
 // create a post
 const createPost = async (req, res) => {
   const file = req.file;
@@ -64,12 +59,13 @@ const createPost = async (req, res) => {
 
 const createUser = async (req, res) => {
   const file = req.file;
-  const { name, email, password, role, date_of_birth, receive_email_updates } = req.body;
+  const { name, email, password, role, date_of_birth, emailUpdates } = req.body;
   const hashedPassword = await bcrypt.hash(password, 10);
   const userDatails = {
     name,
     email,
     role,
+    emailUpdates: JSON.parse(emailUpdates),
     date_of_birth: new Date(date_of_birth),
     password: hashedPassword,
   };
@@ -97,14 +93,16 @@ const createUser = async (req, res) => {
                 ...imgData,
               },
             },
-            userPreferences: {
-              create: {
-                emailUpdates: JSON.parse(receive_email_updates),
-              },
-            },
           },
           include: {
-            profile_pic: true,
+            profile_pic: {
+              select: {
+                id: true,
+                secure_url: true,
+                asset_id: true,
+                user_id: true,
+              },
+            },
           },
         });
         resolve(createdUser);
@@ -153,14 +151,21 @@ const loginSignInUser = async (req, res) => {
         email: email,
       },
       include: {
-        profile_pic: true,
+        profile_pic: {
+          select: {
+            id: true,
+            secure_url: true,
+            asset_id: true,
+            user_id: true,
+          },
+        },
       },
     });
 
     if (user) {
       const isMatch = await bcrypt.compare(password, user.password);
       if (isMatch) {
-        res.json({ message: 'Login successfully', data: user });
+        res.json({ message: `Welcome Back ${user.name}`, data: user });
       } else {
         res.json({ message: 'Incorrect password' });
       }

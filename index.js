@@ -67,7 +67,7 @@ app.get('/single-user/:id', getSignleUser);
 app.delete('/delete-user/:id', deleteUser);
 
 // Edit User
-app.put('/edit-user/:id', editUser);
+app.put('/edit-user/:id', upload.single('profile_pic'), editUser);
 
 app.post('/profile_pic', upload.single('profile_pic'), (req, res) => {
   const file = req.file;

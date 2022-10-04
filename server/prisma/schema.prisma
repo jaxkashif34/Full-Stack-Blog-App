@@ -12,17 +12,16 @@ datasource db {
 }
 
 model User {
-  id               String           @id @default(uuid())
-  name             String
-  email            String?          @unique
-  role             Role             @default(AUTHER)
-  profile_pic      Profile_pic?
-  date_of_birth    DateTime?
-  password         String           @unique
-  writterPost      Post[]           @relation("WrittenPost")
-  favoritePost     Post[]
-  userPreferences  UserPreferences? @relation(fields: [userPreferenceId], references: [id])
-  userPreferenceId String?          @unique
+  id            String       @id @default(uuid())
+  name          String
+  email         String?      @unique
+  role          Role         @default(AUTHER)
+  profile_pic   Profile_pic?
+  date_of_birth DateTime?
+  password      String       @unique
+  writterPost   Post[]       @relation("WrittenPost")
+  favoritePost  Post[]
+  emailUpdates  Boolean?
 
   @@unique([name, email])
   @@index([email])
@@ -39,12 +38,6 @@ model Profile_pic {
   original_filename String
   user              User?   @relation(fields: [user_id], references: [id])
   user_id           String? @unique
-}
-
-model UserPreferences {
-  id           String  @id @default(uuid())
-  emailUpdates Boolean @default(false)
-  user         User?
 }
 
 model Post {

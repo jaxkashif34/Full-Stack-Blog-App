@@ -4,26 +4,26 @@ import { userSliceReducer } from './Auth';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
-const persistorConfig = {
-  key: 'auth',
-  storage,
-  blacklist: ['UIFeatures'],
-  whitelist: ['auth'],
-  stateReconciler: autoMergeLevel2,
-};
 const UIPersistorConfig = {
   key: 'isDark',
   storage,
   whitelist: ['isDark'],
+  stateReconciler: autoMergeLevel2,
+};
+
+const authPersistConfig = {
+  key: 'auth',
+  storage,
+  whitelist: ['currentUser'],
+  stateReconciler: autoMergeLevel2,
 };
 const rootReducer = combineReducers({
   UIFeatures: persistReducer(UIPersistorConfig, UIFeaturesSliceReducer),
-  auth: userSliceReducer,
+  auth: persistReducer(authPersistConfig, userSliceReducer),
 });
 
-const rootPersistor = persistReducer(persistorConfig, rootReducer);
 export const store = configureStore({
-  reducer: rootPersistor,
+  reducer: rootReducer,
   middleware: getDefaultMiddleware({
     serializableCheck: false,
   }),

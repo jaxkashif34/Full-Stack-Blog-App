@@ -1,10 +1,10 @@
 import React, { useRef } from 'react';
 import { AppBar, Toolbar, Typography, Box, Menu, MenuItem, Avatar, Tooltip, ListItemIcon } from '@mui/material';
 import { Container } from '@mui/system';
-import { Book, Person, Logout } from '@mui/icons-material';
-import { Link as RouterLink } from 'react-router-dom';
+import { Book, Person, Logout, ManageAccounts } from '@mui/icons-material';
+import { Link, Link as RouterLink } from 'react-router-dom';
 import { handleUserMenu } from '../../store/UI-Features';
-import { setCurrentUser } from '../../store/Auth';
+import { setCurrentUser, setEditedUser } from '../../store/Auth';
 import { useDispatch, useSelector } from 'react-redux';
 import storage from 'redux-persist/lib/storage';
 const Nav = () => {
@@ -45,31 +45,44 @@ const Nav = () => {
                 src={currentUser?.profile_pic?.secure_url}
                 alt={currentUser?.name}
                 sx={{ width: { xs: 40, md: 45 }, height: { xs: 40, md: 45 } }}
-                onClick={() => dispatch(handleUserMenu(true))}>
+                onClick={() => currentUser !== null && dispatch(handleUserMenu(true))}>
                 <input type="file" accept="image/*" hidden />
                 {currentUser === null && <Person />}
               </Avatar>
             </Tooltip>
-
-            <Menu
-              anchorEl={anchorRefProfile.current}
-              id="profile-menu"
-              open={isUserMenuOpen}
-              onClose={() => dispatch(handleUserMenu(false))}
-              anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-              transformOrigin={{ vertical: 'top', horizontal: 'center' }}>
-              <MenuItem
-                onClick={() => {
-                  dispatch(setCurrentUser(null));
-                  storage.removeItem('persist:auth');
-                  dispatch(handleUserMenu(false));
-                }}>
-                <ListItemIcon>
-                  <Logout />
-                </ListItemIcon>
-                LogOut
-              </MenuItem>
-            </Menu>
+            {currentUser !== null && (
+              <Menu
+                anchorEl={anchorRefProfile.current}
+                id="profile-menu"
+                open={isUserMenuOpen}
+                onClose={() => dispatch(handleUserMenu(false))}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+                transformOrigin={{ vertical: 'top', horizontal: 'center' }}>
+                <Link to={`edit-user/${currentUser?.id}`} style={{ color: 'inherit', textDecoration: 'none' }}>
+                  <MenuItem
+                    onClick={() => {
+                      dispatch(handleUserMenu(false));
+                      dispatch(setEditedUser(currentUser));
+                    }}>
+                    <ListItemIcon>
+                      <ManageAccounts />
+                    </ListItemIcon>
+                    Edit Profile
+                  </MenuItem>
+                </Link>
+                <MenuItem
+                  onClick={() => {
+                    dispatch(setCurrentUser(null));
+                    storage.removeItem('persist:auth');
+                    dispatch(handleUserMenu(false));
+                  }}>
+                  <ListItemIcon>
+                    <Logout />
+                  </ListItemIcon>
+                  LogOut
+                </MenuItem>
+              </Menu>
+            )}
           </Box>
         </Toolbar>
       </Container>
