@@ -10,38 +10,6 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// const main = async () => {
-//   const createPost = await prisma.post.create({
-//     data: {
-//       title: 'This is test title',
-//       content: 'This is test content',
-//       autherId: '4593c1ff-4ce8-49b1-a0d0-e8b5be6bd82c',
-//       tags: ['new', 'test'],
-//       bg_image:{
-//         c
-//       }
-//     },
-//   });
-//   const createUser = await prisma.user.create({
-//     data: {
-//       name: 'Shair Ali',
-//       age: 25,
-//       password: 'kashif',
-//       date_of_birth: new Date(),
-//       email: 'test@example.com',
-//       userPreferences:{
-//         create:{
-//           emailUpdates
-//         }
-//       }
-//     },
-//   });
-
-//   console.log(createUser);
-// };
-
-// main();
-
 // ******************** POSTS ********************
 app.get('/all-posts-titles', getAllPosts);
 

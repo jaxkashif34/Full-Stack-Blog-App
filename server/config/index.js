@@ -13,4 +13,17 @@ const options = {
   overwrite: true,
 };
 
-module.exports = { cloudinary, options };
+const uploadToCloudinary = (path) => {
+  return new Promise((resolve, reject) => {
+    cloudinary.uploader.upload(path, options, (err, result) => {
+      if (err) {
+        reject(err);
+      }
+      if (result) {
+        resolve(result);
+      }
+    });
+  });
+};
+
+module.exports = { cloudinary, options, uploadToCloudinary };

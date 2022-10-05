@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import Routes from './routes';
 import SnackBar from './components/Snackbar';
+import Modal from './components/model';
 function App() {
   useEffect(() => {
     // dispatch(getPosts());
@@ -16,6 +17,7 @@ function App() {
       <SnackBar />
       <Routes />
       <BottomBar />
+      <Modal />
     </>
   );
 }

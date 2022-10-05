@@ -1,7 +1,7 @@
-const bcrypt = require('bcrypt');
+const { generateHashPassword } = require('../../utils');
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
-const { options, cloudinary } = require('../../config');
+const { uploadToCloudinary } = require('../../config');
 const editPost = async (req, res) => {
   const { updatedPost } = req.body;
   const postId = req.params.id;
@@ -30,28 +30,14 @@ const editUser = async (req, res) => {
   const file = req.file;
   const { name, email, date_of_birth, role, password, emailUpdates } = req.body;
   const userId = req.params.id;
-  const hashedPassword = await bcrypt.hash(password, 10);
 
   const editedUserData = {
     name,
     email,
     role,
     date_of_birth: new Date(date_of_birth),
-    password: hashedPassword,
+    password: await generateHashPassword(password),
     emailUpdates: JSON.parse(emailUpdates),
-  };
-
-  const uploadToCloudinary = (path) => {
-    return new Promise(async (resolve, reject) => {
-      await cloudinary.uploader.upload(path, options, (err, result) => {
-        if (err) {
-          reject(err);
-        }
-        if (result) {
-          resolve(result);
-        }
-      });
-    });
   };
 
   const updateInDatabase = (imgData) => {

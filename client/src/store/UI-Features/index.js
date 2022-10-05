@@ -19,6 +19,7 @@ const initialState = {
     isOpen: false,
   },
   isUserMenuOpen: false,
+  isModalOpen: false,
 };
 
 export const UIFeaturesSlice = createSlice({
@@ -37,6 +38,9 @@ export const UIFeaturesSlice = createSlice({
     handleUserMenu: (state, { payload }) => {
       state.isUserMenuOpen = payload;
     },
+    handleModal: (state, { payload }) => {
+      state.isModalOpen = payload;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(getPosts.pending, (state) => {
@@ -52,5 +56,5 @@ export const UIFeaturesSlice = createSlice({
   },
 });
 
-export const { setDarkMode, setShowPassword, handleSnack, handleUserMenu } = UIFeaturesSlice.actions;
+export const { setDarkMode, setShowPassword, handleSnack, handleUserMenu, handleModal } = UIFeaturesSlice.actions;
 export const UIFeaturesSliceReducer = UIFeaturesSlice.reducer;

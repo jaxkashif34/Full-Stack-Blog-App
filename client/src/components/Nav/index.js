@@ -1,9 +1,9 @@
 import React, { useRef } from 'react';
 import { AppBar, Toolbar, Typography, Box, Menu, MenuItem, Avatar, Tooltip, ListItemIcon } from '@mui/material';
 import { Container } from '@mui/system';
-import { Book, Person, Logout, ManageAccounts } from '@mui/icons-material';
+import { Book, Person, Logout, ManageAccounts, Delete } from '@mui/icons-material';
 import { Link, Link as RouterLink } from 'react-router-dom';
-import { handleUserMenu } from '../../store/UI-Features';
+import { handleUserMenu, handleModal } from '../../store/UI-Features';
 import { setCurrentUser } from '../../store/Auth';
 import { useDispatch, useSelector } from 'react-redux';
 import storage from 'redux-persist/lib/storage';
@@ -46,7 +46,6 @@ const Nav = () => {
                 alt={currentUser?.name}
                 sx={{ width: { xs: 40, md: 45 }, height: { xs: 40, md: 45 }, cursor: 'pointer' }}
                 onClick={() => currentUser !== null && dispatch(handleUserMenu(true))}>
-                <input type="file" accept="image/*" hidden />
                 {currentUser === null && <Person />}
               </Avatar>
             </Tooltip>
@@ -79,6 +78,15 @@ const Nav = () => {
                     <Logout />
                   </ListItemIcon>
                   LogOut
+                </MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    dispatch(handleModal(true));
+                  }}>
+                  <ListItemIcon>
+                    <Delete />
+                  </ListItemIcon>
+                  Delete Account
                 </MenuItem>
               </Menu>
             )}

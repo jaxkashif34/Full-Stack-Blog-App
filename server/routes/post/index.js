@@ -1,27 +1,14 @@
-const bcrypt = require('bcrypt');
+const { generateHashPassword, comparePassword } = require('../../utils');
 const { PrismaClient } = require('@prisma/client');
-const { cloudinary } = require('../../config');
 const prisma = new PrismaClient();
-const { options } = require('../../config');
+const { uploadToCloudinary } = require('../../config');
 // create a post
 const createPost = async (req, res) => {
   const file = req.file;
   const { title, content, autherId, tags } = req.body;
   const tagsArr = JSON.parse(tags);
-  const uploadToCloudinary = () => {
-    return new Promise((resolve, reject) => {
-      cloudinary.uploader.upload(file.path, options, (err, result) => {
-        if (err) {
-          reject(err);
-        }
-        if (result) {
-          resolve(result);
-        }
-      });
-    });
-  };
 
-  uploadToCloudinary()
+  uploadToCloudinary(file.path)
     .then(async (result) => {
       const imgObj = {
         width: result.width,
@@ -60,28 +47,15 @@ const createPost = async (req, res) => {
 const createUser = async (req, res) => {
   const file = req.file;
   const { name, email, password, role, date_of_birth, emailUpdates } = req.body;
-  const hashedPassword = await bcrypt.hash(password, 10);
   const userDatails = {
     name,
     email,
     role,
     emailUpdates: JSON.parse(emailUpdates),
     date_of_birth: new Date(date_of_birth),
-    password: hashedPassword,
+    password: await generateHashPassword(password),
   };
 
-  const uploadToCloudinary = () => {
-    return new Promise(async (resolve, reject) => {
-      await cloudinary.uploader.upload(file.path, options, (err, result) => {
-        if (err) {
-          reject(err);
-        }
-        if (result) {
-          resolve(result);
-        }
-      });
-    });
-  };
   const saveInDabase = async (imgData) => {
     return await new Promise(async (resolve, reject) => {
       try {
@@ -112,7 +86,7 @@ const createUser = async (req, res) => {
     });
   };
 
-  uploadToCloudinary().then(async (result) => {
+  uploadToCloudinary(file.path).then(async (result) => {
     const { width, height, asset_id, created_at, bytes, secure_url, original_filename } = result;
     const imgData = {
       width,
@@ -163,7 +137,7 @@ const loginSignInUser = async (req, res) => {
     });
 
     if (user) {
-      const isMatch = await bcrypt.compare(password, user.password);
+      const isMatch = await comparePassword(password, user.password);
       if (isMatch) {
         res.json({ message: `Welcome Back ${user.name}`, data: user });
       } else {

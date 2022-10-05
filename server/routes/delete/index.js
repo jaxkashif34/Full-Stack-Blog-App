@@ -22,9 +22,9 @@ const deleteUser = async (req, res) => {
         id: userId,
       },
     });
-    res.send('User Deleted Successfully');
+    res.json({ message: 'User Deleted Successfully' });
   } catch (e) {
-    res.send(JSON.stringify(e));
+    res.json({ error: JSON.stringify(e) });
   }
 };
 
