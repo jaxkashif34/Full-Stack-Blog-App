@@ -7,8 +7,9 @@ import Routes from './routes';
 import SnackBar from './components/Snackbar';
 import Modal from './components/model';
 function App() {
+  const dispatch = useDispatch();
   useEffect(() => {
-    // dispatch(getPosts());
+    dispatch(getPosts());
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (

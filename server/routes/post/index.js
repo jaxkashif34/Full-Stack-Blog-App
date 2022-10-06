@@ -6,7 +6,39 @@ const { uploadToCloudinary } = require('../../config');
 const createPost = async (req, res) => {
   const file = req.file;
   const { title, content, autherId, tags } = req.body;
-  const tagsArr = JSON.parse(tags);
+
+  const userDetails = {
+    title,
+    content,
+    autherId,
+    tags: JSON.parse(tags),
+  };
+
+  console.log(userDetails);
+
+  const saveInDataBase = (imgObj) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const createdPost = await prisma.post.create({
+          data: {
+            ...userDetails,
+            bg_image: {
+              create: {
+                ...imgObj,
+              },
+            },
+          },
+          include: {
+            bg_image: true,
+          },
+        });
+
+        resolve(createdPost);
+      } catch (err) {
+        reject(err);
+      }
+    });
+  };
 
   uploadToCloudinary(file.path)
     .then(async (result) => {
@@ -20,24 +52,14 @@ const createPost = async (req, res) => {
         original_filename: result.original_filename,
       };
 
-      const createdPost = await prisma.post.create({
-        data: {
-          title,
-          content,
-          autherId,
-          tags: tagsArr,
-          bg_image: {
-            create: {
-              ...imgObj,
-            },
-          },
-        },
-        include: {
-          bg_image: true,
-        },
-      });
-
-      res.send({ message: 'Post created successfully', data: createdPost });
+      saveInDataBase(imgObj)
+        .then((result) => {
+          res.json({ message: 'Post created successfully', data: result });
+        })
+        .catch((err) => {
+          console.log(err);
+          res.json({ message: 'Error in creating post', error: err });
+        });
     })
     .catch((err) => {
       res.status(400).send({ message: 'Error in saving data into database', error: err });

@@ -2,11 +2,11 @@ import React from 'react';
 import { Button, Card, CardActions, CardContent, CardMedia, IconButton, Typography } from '@mui/material';
 import { Favorite } from '@mui/icons-material';
 const CardForGrid = ({ post }) => {
-  const { id, title, createdAt, bg_image, autherId } = post;
+  const { title, bg_image } = post;
   const { secure_url, original_filename } = bg_image;
   return (
     <Card>
-      <CardMedia component="img" height={140} image={secure_url} alt={original_filename} />
+      <CardMedia component="img" height={140} image={secure_url} alt={original_filename} sx={{ objectFit: 'cover' }} />
       <CardContent>
         <Typography variant="body1" color="inherit">
           {title}
