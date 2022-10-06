@@ -12,20 +12,17 @@ datasource db {
 }
 
 model User {
-  id            String      @id @default(uuid())
+  id            String       @id @default(uuid())
   name          String
-  email         String      @unique
-  role          Role        @default(AUTHER)
-  profile_pic   Profile_pic @relation(fields: [profile_id], references: [id])
-  profile_id    String      @unique
+  email         String       @unique
+  role          Role         @default(AUTHER)
+  profile_pic   Profile_pic? @relation(fields: [profile_id], references: [id])
+  profile_id    String?      @unique
   date_of_birth DateTime?
-  password      String      @unique
-  writterPost   Post[]      @relation("WrittenPost")
+  password      String       @unique
+  writterPost   Post[]       @relation("WrittenPost")
   favoritePost  Post[]
-  emailUpdates  Boolean?
-
-  @@unique([name, email])
-  @@index([email])
+  emailUpdates  Boolean?     @default(false)
 }
 
 model Profile_pic {
@@ -49,7 +46,7 @@ model Post {
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
   bg_image    Bg_Image?  @relation(fields: [bg_image_id], references: [id])
-  bg_image_id String     @unique
+  bg_image_id String?    @unique
   auther      User?      @relation("WrittenPost", fields: [autherId], references: [id])
   favoriteBy  User[]
   categories  Categoty[]
