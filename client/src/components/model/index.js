@@ -6,7 +6,6 @@ import { styled } from '@mui/material/styles';
 import Axios from 'axios';
 import { setCurrentUser } from '../../store/Auth';
 import { handleSnack, handleUserMenu } from '../../store/UI-Features';
-import { removePost } from '../../store/Posts';
 import { useNavigate } from 'react-router-dom';
 import storage from 'redux-persist/lib/storage';
 
@@ -22,9 +21,7 @@ const Modal = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { isModalOpen } = useSelector((state) => state.UIFeatures);
-  const { posts } = useSelector((state) => state.post);
   const { currentUser } = useSelector((state) => state.auth);
-  const delePost = posts.find((post) => post.autherId === currentUser?.id);
   const handleDelete = async () => {
     dispatch(setCurrentUser(null));
 
@@ -34,9 +31,6 @@ const Modal = () => {
     })
       .then((result) => {
         dispatch(handleSnack({ message: result.data.message, isOpen: true }));
-        if (delePost?.autherId) {
-          dispatch(removePost(delePost?.autherId));
-        }
         storage.removeItem('persist:auth');
         dispatch(handleUserMenu(false));
       })
