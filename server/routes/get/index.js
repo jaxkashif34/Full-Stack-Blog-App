@@ -14,6 +14,12 @@ const getAllPosts = async (req, res) => {
           },
         },
         autherId: true,
+        favoriteBy: {
+          select: {
+            name: true,
+            id: true,
+          },
+        },
       },
     });
     res.send(allPosts);
@@ -36,18 +42,4 @@ const getSignlePost = async (req, res) => {
   }
 };
 
-const getSignleUser = async (req, res) => {
-  const userId = req.params.id;
-  try {
-    const user = await prisma.user.findUnique({
-      where: {
-        id: userId,
-      },
-    });
-    res.send(user);
-  } catch (e) {
-    res.send(JSON.stringify(e));
-  }
-};
-
-module.exports = { getAllPosts, getSignlePost, getSignleUser };
+module.exports = { getAllPosts, getSignlePost };

@@ -24,7 +24,6 @@ const AuthForm = ({ form }) => {
         ...values,
         profile_pic: profile_pic.file,
       };
-      console.log(uploadedData);
       Object.keys(uploadedData).forEach((key) => {
         data.append(key, uploadedData[key]);
       });
@@ -41,8 +40,11 @@ const AuthForm = ({ form }) => {
               navigate('/');
             })
             .catch((err) => {
-              dispatch(handleSnack({ isOpen: true, message: err.message }));
-              console.log(err);
+              if (err.response.data.error.indexOf('Unique constraint failed on the fields: (`email`)') !== -1) {
+                dispatch(handleSnack({ isOpen: true, message: 'Email already exists' }));
+              } else {
+                dispatch(handleSnack({ isOpen: true, message: err.response.data.message }));
+              }
             })
             .finally(() => {
               actions.setSubmitting(false);
@@ -64,8 +66,7 @@ const AuthForm = ({ form }) => {
             navigate('/');
           })
           .catch((err) => {
-            dispatch(handleSnack({ isOpen: true, message: err.message }));
-            console.log(err);
+            dispatch(handleSnack({ isOpen: true, message: err.response.data.message }));
           });
       }
     } else if (form === 'signin') {

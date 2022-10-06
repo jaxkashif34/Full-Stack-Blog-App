@@ -1,6 +1,6 @@
 import Nav from './components/Nav';
 import BottomBar from './components/BottomBar';
-import { getPosts } from './store/UI-Features';
+import { getPosts } from './store/Posts';
 import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import Routes from './routes';

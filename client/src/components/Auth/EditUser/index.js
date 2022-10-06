@@ -1,12 +1,10 @@
-import { Box, TextField, Typography, Container, Grid } from '@mui/material';
+import { Box, Typography, Container } from '@mui/material';
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { setEditedUser } from '../../../store/Auth';
+import { useSelector } from 'react-redux';
 import AuthForm from '../form';
 
 const EditUser = () => {
-  const { editUser, currentUser } = useSelector((state) => state.auth);
-  const dispatch = useDispatch();
+  const { currentUser } = useSelector((state) => state.auth);
 
   return (
     <Box>

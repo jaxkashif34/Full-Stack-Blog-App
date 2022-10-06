@@ -4,7 +4,9 @@ import { Box, Button, Chip, Container, FormControl, Grid, InputLabel, MenuItem, 
 import { Stack } from '@mui/system';
 import Axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
-import { handleSnack, addPosts } from '../../../store/UI-Features';
+import { handleSnack } from '../../../store/UI-Features';
+import { setPosts } from '../../../store/Posts';
+import { useNavigate } from 'react-router-dom';
 const UploadImage = styled(Box)(({ theme }) => ({
   width: 300,
   height: 150,
@@ -43,6 +45,7 @@ const MenuProps = {
 };
 
 const AddPost = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.auth);
   const theme = useTheme();
@@ -94,11 +97,12 @@ const AddPost = () => {
 
     Axios({ url: 'http://localhost:8000/create-post', method: 'POST', data })
       .then((response) => {
-        dispatch(addPosts(response.data.data));
+        dispatch(setPosts(response.data.data));
         dispatch(handleSnack({ isOpen: true, message: response.data.message }));
+        navigate('/');
       })
       .catch((err) => {
-        dispatch(handleSnack({ isOpen: true, message: err.data.message }));
+        dispatch(handleSnack({ isOpen: true, message: err.response.data.message }));
       });
   };
 

@@ -1,17 +1,6 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
-
-export const getPosts = createAsyncThunk('post/getPosts', async () => {
-  const response = await axios.get('http://localhost:8000/all-posts-titles');
-  return response.data;
-});
-window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-  const osTheme = e.matches;
-  setDarkMode(osTheme);
-});
+import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
   isDark: true,
-  posts: [],
   status: '',
   showPassword: false,
   snack: {
@@ -41,23 +30,8 @@ export const UIFeaturesSlice = createSlice({
     handleModal: (state, { payload }) => {
       state.isModalOpen = payload;
     },
-    addPosts: (state, { payload }) => {
-      state.posts = [...state.posts, payload];
-    },
-  },
-  extraReducers: (builder) => {
-    builder.addCase(getPosts.pending, (state) => {
-      state.status = 'pending';
-    });
-    builder.addCase(getPosts.fulfilled, (state, { payload }) => {
-      state.posts = payload;
-      state.status = 'success';
-    });
-    builder.addCase(getPosts.rejected, (state) => {
-      state.status = 'rejected';
-    });
   },
 });
 
-export const { setDarkMode, setShowPassword, handleSnack, handleUserMenu, handleModal, addPosts } = UIFeaturesSlice.actions;
+export const { setDarkMode, setShowPassword, handleSnack, handleUserMenu, handleModal } = UIFeaturesSlice.actions;
 export const UIFeaturesSliceReducer = UIFeaturesSlice.reducer;

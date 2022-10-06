@@ -3,10 +3,10 @@ import Auth from '../components/Auth';
 import SignUp from '../components/Auth/SigUp';
 import SignIn from '../components/Auth/SignIn';
 import { Route, Routes } from 'react-router-dom';
-import AllPosts from '../components/Blogs/AllPosts';
+import AllPosts from '../components/Posts/AllPosts';
 import PrivateRoutes from './privateRoutes';
 import EditUser from '../components/Auth/EditUser';
-import AddPost from "../components/Blogs/CreatePost";
+import AddPost from "../components/Posts/CreatePost";
 const AllRoutes = () => {
   return (
     <Routes>

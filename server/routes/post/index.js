@@ -10,11 +10,8 @@ const createPost = async (req, res) => {
   const userDetails = {
     title,
     content,
-    autherId,
     tags: JSON.parse(tags),
   };
-
-  console.log(userDetails);
 
   const saveInDataBase = (imgObj) => {
     return new Promise(async (resolve, reject) => {
@@ -25,6 +22,11 @@ const createPost = async (req, res) => {
             bg_image: {
               create: {
                 ...imgObj,
+              },
+            },
+            auther: {
+              connect: {
+                id: autherId,
               },
             },
           },
@@ -57,19 +59,18 @@ const createPost = async (req, res) => {
           res.json({ message: 'Post created successfully', data: result });
         })
         .catch((err) => {
-          console.log(err);
           res.json({ message: 'Error in creating post', error: err });
         });
     })
     .catch((err) => {
-      res.status(400).send({ message: 'Error in saving data into database', error: err });
+      res.status(400).send({ message: 'Error in uploading', error: err });
     });
 };
 
 const createUser = async (req, res) => {
   const file = req.file;
   const { name, email, password, role, date_of_birth, emailUpdates } = req.body;
-  const userDatails = {
+  const userDetails = {
     name,
     email,
     role,
@@ -83,7 +84,7 @@ const createUser = async (req, res) => {
       try {
         const createdUser = await prisma.user.create({
           data: {
-            ...userDatails,
+            ...userDetails,
             profile_pic: {
               create: {
                 ...imgData,
@@ -96,7 +97,11 @@ const createUser = async (req, res) => {
                 id: true,
                 secure_url: true,
                 asset_id: true,
-                user_id: true,
+                user: {
+                  select: {
+                    id: true,
+                  },
+                },
               },
             },
           },
@@ -108,26 +113,30 @@ const createUser = async (req, res) => {
     });
   };
 
-  uploadToCloudinary(file.path).then(async (result) => {
-    const { width, height, asset_id, created_at, bytes, secure_url, original_filename } = result;
-    const imgData = {
-      width,
-      height,
-      asset_id,
-      created_at,
-      bytes,
-      secure_url,
-      original_filename,
-    };
+  uploadToCloudinary(file.path)
+    .then(async (result) => {
+      const { width, height, asset_id, created_at, bytes, secure_url, original_filename } = result;
+      const imgData = {
+        width,
+        height,
+        asset_id,
+        created_at,
+        bytes,
+        secure_url,
+        original_filename,
+      };
 
-    saveInDabase(imgData)
-      .then((result) => {
-        res.send({ message: `Welcome ${name}`, data: result });
-      })
-      .catch((err) => {
-        res.status(404).send({ message: 'Error in saving user', error: err });
-      });
-  });
+      saveInDabase(imgData)
+        .then((result) => {
+          res.send({ message: `Welcome ${name}`, data: result });
+        })
+        .catch((err) => {
+          res.status(404).send({ message: 'Error in saving user', error: err.message });
+        });
+    })
+    .catch((err) => {
+      res.status(404).json({ message: 'Error in uploading user profile', error: err.message });
+    });
 };
 
 const loginSignInUser = async (req, res) => {
@@ -152,7 +161,11 @@ const loginSignInUser = async (req, res) => {
             id: true,
             secure_url: true,
             asset_id: true,
-            user_id: true,
+            user: {
+              select: {
+                id: true,
+              },
+            },
           },
         },
       },

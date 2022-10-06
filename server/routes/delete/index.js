@@ -16,16 +16,18 @@ const deletePost = async (req, res) => {
 
 const deleteUser = async (req, res) => {
   const userId = req.params.id;
-  try {
-    await prisma.user.delete({
+  prisma.user
+    .delete({
       where: {
         id: userId,
       },
+    })
+    .then(() => {
+      res.json({ message: 'User Deleted Successfully' });
+    })
+    .catch((err) => {
+      res.json({ error: JSON.stringify(err) });
     });
-    res.json({ message: 'User Deleted Successfully' });
-  } catch (e) {
-    res.json({ error: JSON.stringify(e) });
-  }
 };
 
 module.exports = { deletePost, deleteUser };

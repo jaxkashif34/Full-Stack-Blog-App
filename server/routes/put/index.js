@@ -3,27 +3,62 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const { uploadToCloudinary } = require('../../config');
 const editPost = async (req, res) => {
-  const { updatedPost } = req.body;
+  const { title, content, tags, favoritedBy, isLiked } = req.body;
   const postId = req.params.id;
-  const title = updatedPost.title;
-  const content = updatedPost.content;
-  const tags = updatedPost.tags;
   try {
     const editedPost = await prisma.post.update({
       where: {
         id: postId,
       },
-      data: {
-        title,
-        content,
-        tags: {
-          push: tags,
+      ...((title != null || content != null || tags != null || favoritedBy != null) && {
+        data: {
+          ...(title != null && {
+            title,
+          }),
+          ...(content != null && {
+            content,
+          }),
+          ...(tags != null && {
+            tags: {
+              push: tags,
+            },
+          }),
+          ...(favoritedBy != null && {
+            favoriteBy: {
+              ...(isLiked
+                ? {
+                    connect: {
+                      id: favoritedBy,
+                    },
+                  }
+                : {
+                    disconnect: {
+                      id: favoritedBy,
+                    },
+                  }),
+            },
+          }),
+        },
+      }),
+
+      include: {
+        favoriteBy: {
+          select: {
+            name: true,
+            id: true,
+          },
+        },
+        bg_image: {
+          select: {
+            secure_url: true,
+            original_filename: true,
+          },
         },
       },
     });
-    res.send(editedPost);
+    res.status(200).json({ message: 'Post updated successfully', data: editedPost });
   } catch (e) {
-    res.send(JSON.stringify(e));
+    res.status(200).json({ message: 'Error updating post', error: e });
   }
 };
 const editUser = async (req, res) => {

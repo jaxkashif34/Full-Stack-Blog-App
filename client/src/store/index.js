@@ -2,6 +2,7 @@ import { combineReducers, configureStore, getDefaultMiddleware } from '@reduxjs/
 import { UIFeaturesSliceReducer } from './UI-Features';
 import { userSliceReducer } from './Auth';
 import { persistStore, persistReducer } from 'redux-persist';
+import postReducer from './Posts';
 import storage from 'redux-persist/lib/storage';
 import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
 const UIPersistorConfig = {
@@ -20,6 +21,7 @@ const authPersistConfig = {
 const rootReducer = combineReducers({
   UIFeatures: persistReducer(UIPersistorConfig, UIFeaturesSliceReducer),
   auth: persistReducer(authPersistConfig, userSliceReducer),
+  post: postReducer,
 });
 
 export const store = configureStore({
