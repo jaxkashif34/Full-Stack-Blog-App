@@ -6,6 +6,7 @@ import { styled } from '@mui/material/styles';
 import Axios from 'axios';
 import { setCurrentUser } from '../../store/Auth';
 import { handleSnack, handleUserMenu } from '../../store/UI-Features';
+import { removePost } from '../../store/Posts';
 import { useNavigate } from 'react-router-dom';
 import storage from 'redux-persist/lib/storage';
 
@@ -24,7 +25,8 @@ const Modal = () => {
   const { currentUser } = useSelector((state) => state.auth);
   const handleDelete = async () => {
     dispatch(setCurrentUser(null));
-
+    navigate('/auth/sign-in');
+    dispatch(handleModal(false));
     await Axios({
       method: 'DELETE',
       url: `http://localhost:8000/delete-user/${currentUser.id}`,
@@ -33,12 +35,11 @@ const Modal = () => {
         dispatch(handleSnack({ message: result.data.message, isOpen: true }));
         storage.removeItem('persist:auth');
         dispatch(handleUserMenu(false));
+        dispatch(removePost(currentUser.id));
       })
       .catch((err) => {
         dispatch(handleSnack({ message: err.message, isOpen: true }));
       });
-    navigate('/auth/sign-in');
-    dispatch(handleModal(false));
   };
   return (
     <MuiModal open={isModalOpen} onClose={() => dispatch(handleModal(false))}>

@@ -108,6 +108,7 @@ const createUser = async (req, res) => {
         });
         resolve(createdUser);
       } catch (e) {
+        console.log(e);
         reject(e);
       }
     });

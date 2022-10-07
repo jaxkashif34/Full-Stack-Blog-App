@@ -16,9 +16,8 @@ model User {
   name          String
   email         String       @unique
   role          Role         @default(AUTHER)
-  profile_pic   Profile_pic? @relation(fields: [profile_id], references: [id])
-  profile_id    String?      @unique
-  date_of_birth DateTime?
+  profile_pic   Profile_pic?
+  date_of_birth DateTime
   password      String       @unique
   writterPost   Post[]       @relation("WrittenPost")
   favoritePost  Post[]
@@ -34,22 +33,22 @@ model Profile_pic {
   bytes             Int
   secure_url        String
   original_filename String
-  user              User?
+  user              User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId            String @unique
 }
 
 model Post {
-  id          String     @id @default(uuid())
-  title       String
-  content     String
-  tags        String[] // need to figure out that how we will store unique items in scalar list
-  autherId    String?
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-  bg_image    Bg_Image?  @relation(fields: [bg_image_id], references: [id])
-  bg_image_id String?    @unique
-  auther      User?      @relation("WrittenPost", fields: [autherId], references: [id])
-  favoriteBy  User[]
-  categories  Categoty[]
+  id         String     @id @default(uuid())
+  title      String
+  content    String
+  tags       String[] // need to figure out that how we will store unique items in scalar list
+  autherId   String
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  bg_image   Bg_Image?
+  auther     User       @relation("WrittenPost", fields: [autherId], references: [id], onDelete: Cascade)
+  favoriteBy User[]
+  categories Categoty[]
 }
 
 model Bg_Image {
@@ -61,7 +60,8 @@ model Bg_Image {
   bytes             Int
   secure_url        String
   original_filename String
-  post              Post?
+  post              Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId            String @unique
 }
 
 model Categoty {
