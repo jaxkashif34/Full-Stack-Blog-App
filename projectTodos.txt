@@ -1,1 +1,3 @@
 need to add drawer on menu on mobile screen
+need to add forbidenword middleware
+check if the request to liked the post then only send some data in server put reques

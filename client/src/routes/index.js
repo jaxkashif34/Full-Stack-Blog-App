@@ -7,6 +7,7 @@ import AllPosts from '../components/Posts/AllPosts';
 import PrivateRoutes from './privateRoutes';
 import EditUser from '../components/Auth/EditUser';
 import AddPost from "../components/Posts/CreatePost";
+import ViewPost from '../components/Posts/ViewPost';
 const AllRoutes = () => {
   return (
     <Routes>
@@ -14,6 +15,7 @@ const AllRoutes = () => {
         <Route path="/" element={<AllPosts />} />
         <Route path="edit-user/:id" element={<EditUser />} />
         <Route path="add-post/:id" element={<AddPost />} />
+        <Route path="view-post/:id" element={<ViewPost />} />
       </Route>
       <Route path="/auth" element={<Auth />}>
         <Route path="sign-up" element={<SignUp />} />

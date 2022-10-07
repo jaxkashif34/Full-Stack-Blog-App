@@ -3,9 +3,7 @@ import { Formik, Form } from 'formik';
 import { Stack, Box, Grid, Typography } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { signUpInitial, signUpValidation, signInInitial, signInValidation } from '../utils';
-import Axios from 'axios';
-import { handleSnack } from '../../../store/UI-Features';
-import { setCurrentUser } from '../../../store/Auth';
+import { handleForm } from '../../../store/Auth';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { UploadPic, NameField, EmailField, PasswordField, RoleField, DobField, CheckBox } from './components';
@@ -17,76 +15,13 @@ const AuthForm = ({ form }) => {
   const validationSchema = form === 'signup' ? signUpValidation : form === 'editProfile' ? signUpValidation : signInValidation;
   const initialValues = form === 'signup' ? signUpInitial : form === 'editProfile' ? signUpInitial : signInInitial;
   const isFormSignUpOrEdit = form === 'signup' || form === 'editProfile';
-  const onSubmit = async (values, actions) => {
-    const data = new FormData();
-    if (isFormSignUpOrEdit) {
-      const uploadedData = {
-        ...values,
-        profile_pic: profile_pic.file,
-      };
-      Object.keys(uploadedData).forEach((key) => {
-        data.append(key, uploadedData[key]);
-      });
-      if (form === 'signup') {
-        if (profile_pic.file !== null) {
-          Axios({
-            url: 'http://localhost:8000/sign-up',
-            method: 'POST',
-            data,
-          })
-            .then((response) => {
-              dispatch(setCurrentUser(response.data.data));
-              dispatch(handleSnack({ isOpen: true, message: response.data.message }));
-              navigate('/');
-            })
-            .catch((err) => {
-              if (err.response.data.error.indexOf('Unique constraint failed on the fields: (`email`)') !== -1) {
-                dispatch(handleSnack({ isOpen: true, message: 'Email already exists' }));
-              } else {
-                dispatch(handleSnack({ isOpen: true, message: err.response.data.message }));
-              }
-            })
-            .finally(() => {
-              actions.setSubmitting(false);
-            });
-        } else {
-          dispatch(handleSnack({ isOpen: true, message: 'Please select a profile picture' }));
-          actions.setSubmitting(false);
-        }
-      } else if (form === 'editProfile') {
-        // edit user code will goes here'
-        Axios({
-          url: `http://localhost:8000/edit-user/${currentUser?.id}`,
-          method: 'PUT',
-          data,
-        })
-          .then((response) => {
-            dispatch(setCurrentUser({ ...currentUser, ...response.data.data }));
-            dispatch(handleSnack({ isOpen: true, message: response.data.message }));
-            navigate('/');
-          })
-          .catch((err) => {
-            dispatch(handleSnack({ isOpen: true, message: err.response.data.message }));
-          });
-      }
-    } else if (form === 'signin') {
-      Axios({
-        url: 'http://localhost:8000/log-in',
-        method: 'POST',
-        data: values,
-      })
-        .then((response) => {
-          dispatch(setCurrentUser(response.data.data));
-          dispatch(handleSnack({ isOpen: true, message: response.data.message }));
-          navigate('/');
-        })
-        .catch((err) => {
-          dispatch(handleSnack({ isOpen: true, message: err.message }));
-        })
-        .finally(() => {
-          actions.setSubmitting(false);
-        });
-    }
+  const onSubmit = async (values, { setSubmitting }) => {
+    const data = {
+      isFormSignUpOrEdit,
+      profile_pic: profile_pic.file,
+      form,
+    };
+    dispatch(handleForm(data));
   };
   return (
     <Box sx={{ width: { xs: '100%', md: '60%' }, mx: 'auto', py: 1, px: 2 }}>

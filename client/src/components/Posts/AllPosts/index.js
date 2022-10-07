@@ -1,6 +1,6 @@
 import React from 'react';
 import { Container, Grid } from '@mui/material';
-import GridCard from '../GridCard';
+import GridCard from '../Post';
 import { useSelector } from 'react-redux';
 import AddPost from '../addPostButton';
 const AllBlogs = () => {

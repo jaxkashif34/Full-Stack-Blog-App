@@ -3,21 +3,22 @@ const prisma = new PrismaClient();
 const getAllPosts = async (req, res) => {
   try {
     const allPosts = await prisma.post.findMany({
-      select: {
-        title: true,
-        id: true,
-        createdAt: true,
+      include: {
         bg_image: {
           select: {
             secure_url: true,
             original_filename: true,
           },
         },
-        autherId: true,
         favoriteBy: {
           select: {
             name: true,
             id: true,
+          },
+        },
+        auther: {
+          select: {
+            name: true,
           },
         },
       },

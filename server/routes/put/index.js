@@ -40,7 +40,7 @@ const editPost = async (req, res) => {
           }),
         },
       }),
-
+      // check if the request to liked the post then only send some data
       include: {
         favoriteBy: {
           select: {
