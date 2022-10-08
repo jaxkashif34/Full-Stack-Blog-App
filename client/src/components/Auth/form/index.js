@@ -3,7 +3,7 @@ import { Formik, Form } from 'formik';
 import { Stack, Box, Grid, Typography } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { signUpInitial, signUpValidation, signInInitial, signInValidation } from '../utils';
-import { handleForm } from '../../../store/Auth';
+import { handleSignUp, handleLogin, handleUpdateUser } from '../../../store/Auth';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { UploadPic, NameField, EmailField, PasswordField, RoleField, DobField, CheckBox } from './components';
@@ -16,12 +16,31 @@ const AuthForm = ({ form }) => {
   const initialValues = form === 'signup' ? signUpInitial : form === 'editProfile' ? signUpInitial : signInInitial;
   const isFormSignUpOrEdit = form === 'signup' || form === 'editProfile';
   const onSubmit = async (values, { setSubmitting }) => {
-    const data = {
-      isFormSignUpOrEdit,
-      profile_pic: profile_pic.file,
-      form,
-    };
-    dispatch(handleForm(data));
+    if (form === 'signup') {
+      const data = {
+        profile_pic: profile_pic.file,
+        setSubmitting,
+        values,
+      };
+      await dispatch(handleSignUp(data));
+      navigate('/');
+    } else if (form === 'signin') {
+      const data = {
+        setSubmitting,
+        values,
+      };
+      await dispatch(handleLogin(data));
+      navigate('/');
+    } else if (form === 'editProfile') {
+      const data = {
+        setSubmitting,
+        values,
+        profile_pic: profile_pic.file,
+        currentUserId: currentUser.id,
+      };
+      await dispatch(handleUpdateUser(data));
+      navigate('/');
+    }
   };
   return (
     <Box sx={{ width: { xs: '100%', md: '60%' }, mx: 'auto', py: 1, px: 2 }}>

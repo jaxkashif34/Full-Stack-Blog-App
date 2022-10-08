@@ -3,13 +3,9 @@ import { Button, Card, Modal as MuiModal, Typography, Stack } from '@mui/materia
 import { handleModal } from '../../store/UI-Features';
 import { useSelector, useDispatch } from 'react-redux';
 import { styled } from '@mui/material/styles';
-import Axios from 'axios';
-import { setCurrentUser } from '../../store/Auth';
-import { handleSnack, handleUserMenu } from '../../store/UI-Features';
-import { removePost } from '../../store/Posts';
+import {  handleDeleteUser } from '../../store/Auth';
+import {  handleUserMenu } from '../../store/UI-Features';
 import { useNavigate } from 'react-router-dom';
-import storage from 'redux-persist/lib/storage';
-
 const BoxStles = styled(Card)(({ theme }) => ({
   position: 'absolute',
   top: '50%',
@@ -24,22 +20,13 @@ const Modal = () => {
   const { isModalOpen } = useSelector((state) => state.UIFeatures);
   const { currentUser } = useSelector((state) => state.auth);
   const handleDelete = async () => {
-    dispatch(setCurrentUser(null));
-    navigate('/auth/sign-in');
+    const data = {
+      currentUserId: currentUser.id,
+    };
     dispatch(handleModal(false));
-    await Axios({
-      method: 'DELETE',
-      url: `http://localhost:8000/delete-user/${currentUser.id}`,
-    })
-      .then((result) => {
-        dispatch(handleSnack({ message: result.data.message, isOpen: true }));
-        storage.removeItem('persist:auth');
-        dispatch(handleUserMenu(false));
-        dispatch(removePost(currentUser.id));
-      })
-      .catch((err) => {
-        dispatch(handleSnack({ message: err.message, isOpen: true }));
-      });
+    dispatch(handleUserMenu(false));
+    await dispatch(handleDeleteUser(data));
+    navigate('/auth/sign-in');
   };
   return (
     <MuiModal open={isModalOpen} onClose={() => dispatch(handleModal(false))}>

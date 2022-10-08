@@ -4,9 +4,8 @@ import { Container } from '@mui/system';
 import { Book, Person, Logout, ManageAccounts, Delete } from '@mui/icons-material';
 import { Link, Link as RouterLink } from 'react-router-dom';
 import { handleUserMenu, handleModal } from '../../store/UI-Features';
-import { setCurrentUser } from '../../store/Auth';
+import { logOutUser } from '../../store/Auth';
 import { useDispatch, useSelector } from 'react-redux';
-import storage from 'redux-persist/lib/storage';
 const Nav = () => {
   const anchorRefProfile = useRef(null);
   const dispatch = useDispatch();
@@ -70,8 +69,7 @@ const Nav = () => {
                 </Link>
                 <MenuItem
                   onClick={() => {
-                    dispatch(setCurrentUser(null));
-                    storage.removeItem('persist:auth');
+                    dispatch(logOutUser());
                     dispatch(handleUserMenu(false));
                   }}>
                   <ListItemIcon>

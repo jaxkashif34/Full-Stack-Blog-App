@@ -12,7 +12,8 @@ const CardForGrid = ({ post }) => {
 
   const isLikedByCurrentUser = post?.favoriteBy?.find((fovoriteBy) => fovoriteBy?.id === currentUser?.id)?.id === currentUser?.id;
   const handleLike = () => {
-    dispatch(handleFavorite({ postId: post?.id, currentUserId: currentUser?.id, isLikedByCurrentUser }));
+    const data = { postId: post?.id, currentUserId: currentUser?.id, isLikedByCurrentUser };
+    dispatch(handleFavorite(data));
   };
   return (
     <Card>
