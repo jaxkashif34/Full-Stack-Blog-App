@@ -1,12 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { Box, Button, Chip, FormControl, Grid, InputLabel, MenuItem, OutlinedInput, Select, Stack, TextareaAutosize } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
-import { Box, Button, Chip, Container, FormControl, Grid, InputLabel, MenuItem, OutlinedInput, Select, TextareaAutosize, Typography } from '@mui/material';
-import { Stack } from '@mui/system';
-import Axios from 'axios';
-import { useSelector, useDispatch } from 'react-redux';
-import { handleSnack } from '../../../store/UI-Features';
-import { setPosts } from '../../../store/Posts';
-import { useNavigate } from 'react-router-dom';
+import { LoadingButton } from '@mui/lab';
 const UploadImage = styled(Box)(({ theme }) => ({
   width: 300,
   height: 150,
@@ -32,6 +27,7 @@ const TextAreaStyles = styled(TextareaAutosize)(({ theme }) => ({
   fontWeight: 'bold',
   color: 'gray',
 }));
+
 const tags = ['prisma', 'javaScript', 'typeScript'];
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -43,72 +39,16 @@ const MenuProps = {
     },
   },
 };
-
-const AddPost = () => {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const { currentUser } = useSelector((state) => state.auth);
+const PostForm = ({ data }) => {
+  const { picture, handleChangeProfile, handleChangeTitle, tagsName, handleChange, handlePost, handleChangeContent, post, loading } = data;
   const theme = useTheme();
-  const [tagsName, setTageName] = useState(['new']);
-  const [post, setPost] = useState({ title: '', content: '' });
-  const [picture, setPicture] = useState({ file: null, path: '' });
-
   function getStyles(tag, tagName, theme) {
     return {
       fontWeight: tagName.indexOf(tag) === -1 ? theme.typography.fontWeightRegular : theme.typography.fontWeightMedium,
     };
   }
-  const handleChangeProfile = (file) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onloadend = () => {
-      setPicture({ file, path: reader.result });
-    };
-
-    setPicture({ file: file, path: URL.createObjectURL(file) });
-  };
-
-  const handleChange = (event) => {
-    const {
-      target: { value },
-    } = event;
-    setTageName(
-      // On autofill we get a stringified value.
-      typeof value === 'string' ? value.split(',') : value
-    );
-  };
-
-  const handleChangeTitle = (title) => {
-    setPost({ ...post, title });
-  };
-  const handleChangeContent = (content) => {
-    setPost({ ...post, content });
-  };
-
-  const handlePost = async () => {
-    const data = new FormData();
-    const { title, content } = post;
-    const { file } = picture;
-    const dataToSend = { title, content, tags: JSON.stringify(tagsName), bg_image: file, autherId: currentUser.id };
-
-    Object.keys(dataToSend).forEach((key) => {
-      data.append(key, dataToSend[key]);
-    });
-
-    Axios({ url: 'http://localhost:8000/create-post', method: 'POST', data })
-      .then((response) => {
-        dispatch(setPosts(response.data.data));
-        dispatch(handleSnack({ isOpen: true, message: response.data.message }));
-        navigate('/');
-      })
-      .catch((err) => {
-        dispatch(handleSnack({ isOpen: true, message: err.response.data.message }));
-      });
-  };
-
   return (
-    <Container sx={{ padding: 2, borderRadius: 3 }}>
-      <Typography variant="h4">Create Your Post</Typography>
+    <>
       <UploadImage>
         {picture.file == null ? (
           <Button component="label">
@@ -158,17 +98,17 @@ const AddPost = () => {
               </Select>
             </FormControl>
 
-            <Button variant="contained" onClick={handlePost}>
+            <LoadingButton variant="contained" onClick={handlePost} loading={loading}>
               Post
-            </Button>
+            </LoadingButton>
           </Stack>
         </Grid>
         <Grid item xs={12} md={6}>
           <TextAreaStyles name="title" type="text" placeholder="Body" minRows={9} minLength={1} value={post.content} onChange={(e) => handleChangeContent(e.target.value)} />
         </Grid>
       </Grid>
-    </Container>
+    </>
   );
 };
 
-export default AddPost;
+export default PostForm;

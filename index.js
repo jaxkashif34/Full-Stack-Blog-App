@@ -18,7 +18,7 @@ app.use(express.json());
 
 // main();
 // ******************** POSTS ********************
-app.get('/all-posts-titles', getAllPosts);
+app.get('/all-posts', getAllPosts);
 
 app.post('/create-post', upload.single('bg_image'), createPost);
 // fetching single post
@@ -28,7 +28,7 @@ app.get('/single-post/:id', getSignlePost);
 app.delete('/delete-post/:id', deletePost);
 
 // Edit post
-app.put('/edit-post/:id', editPost);
+app.put('/edit-post/:id', upload.single('bg_image'), editPost);
 // ******************** USER ********************
 // SIGN-UP USER
 app.post('/sign-up', upload.single('profile_pic'), createUser);

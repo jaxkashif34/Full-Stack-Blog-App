@@ -4,13 +4,30 @@ const prisma = new PrismaClient();
 const { uploadToCloudinary } = require('../../config');
 const editPost = async (req, res) => {
   const { title, content, tags, favoritedBy, isLiked } = req.body;
+  const isAlreadyLiked = isLiked && JSON.parse(isLiked);
+  const file = req.file;
   const postId = req.params.id;
   try {
+    let imgData;
+    if (file != null) {
+      const result = await uploadToCloudinary(file.path);
+      const { width, height, asset_id, created_at, bytes, secure_url, original_filename } = result;
+      imgData = {
+        width,
+        height,
+        asset_id,
+        created_at,
+        bytes,
+        secure_url,
+        original_filename,
+      };
+    }
+
     const editedPost = await prisma.post.update({
       where: {
         id: postId,
       },
-      ...((title != null || content != null || tags != null || favoritedBy != null) && {
+      ...((title != null || content != null || tags != null || favoritedBy != null || file != null) && {
         data: {
           ...(title != null && {
             title,
@@ -25,7 +42,7 @@ const editPost = async (req, res) => {
           }),
           ...(favoritedBy != null && {
             favoriteBy: {
-              ...(isLiked
+              ...(isAlreadyLiked
                 ? {
                     connect: {
                       id: favoritedBy,
@@ -38,9 +55,15 @@ const editPost = async (req, res) => {
                   }),
             },
           }),
+          ...(file != null && {
+            bg_image: {
+              update: {
+                ...imgData,
+              },
+            },
+          }),
         },
       }),
-      // check if the request to liked the post then only send some data
       include: {
         favoriteBy: {
           select: {
@@ -54,11 +77,16 @@ const editPost = async (req, res) => {
             original_filename: true,
           },
         },
+        auther: {
+          select: {
+            name: true,
+          },
+        },
       },
     });
-    res.status(200).json({ message: 'Post updated successfully', data: editedPost });
+    res.json({ message: 'Post updated successfully', data: editedPost });
   } catch (e) {
-    res.status(200).json({ message: 'Error updating post', error: e });
+    res.status(400).json({ message: 'Error updating post', error: e });
   }
 };
 const editUser = async (req, res) => {

@@ -23,9 +23,9 @@ const getAllPosts = async (req, res) => {
         },
       },
     });
-    res.send(allPosts);
+    res.json({ message: 'Fetched All Posts', data: allPosts });
   } catch (e) {
-    res.send(JSON.stringify(e));
+    res.status(400).json({ message: 'Error in fetching  Posts', message: e });
   }
 };
 

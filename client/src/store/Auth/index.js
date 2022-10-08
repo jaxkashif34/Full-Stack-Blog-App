@@ -78,7 +78,6 @@ export const handleUpdateUser = createAsyncThunk('auth/handleUpdateUser', async 
     setSubmitting(false);
     return response.data.data;
   } catch (err) {
-    console.log(err);
     dispatch(handleSnack({ isOpen: true, message: err.response.data.message }));
   }
 });
@@ -96,7 +95,6 @@ export const handleDeleteUser = createAsyncThunk('auth/handleDeleteUser', async 
     dispatch(removePost(currentUserId));
     dispatch(handleSnack({ isOpen: true, message: response.data.message }));
   } catch (err) {
-    console.log(err);
     dispatch(handleSnack({ isOpen: true, message: err.response.data.message }));
   }
 });

@@ -1,38 +1,68 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import Axios from 'axios';
 import { handleSnack } from '../UI-Features';
-export const getPosts = createAsyncThunk('post/getPosts', async () => {
+export const getPosts = createAsyncThunk('post/getPosts', async (data, thunkApi) => {
+  const { dispatch } = thunkApi;
   try {
-    const response = await Axios.get('http://localhost:8000/all-posts-titles');
+    const response = await Axios.get('http://localhost:8000/all-posts');
     return response.data;
   } catch (err) {
-    console.log(err);
+    dispatch(handleSnack({ isOpen: true, message: err.response.data.message }));
   }
 });
 
-export const handleFavorite = createAsyncThunk('post/handleFavorite', async (data, thunkApi) => {
-  const { postId, currentUserId, isLikedByCurrentUser } = data;
+export const handleEditPost = createAsyncThunk('post/handleFavorite', async (data, thunkApi) => {
+  const { title, content, tagsName, file, currentUserId, isLikedByCurrentUser, postId } = data;
   const { dispatch } = thunkApi;
-
   try {
+    const data = new FormData();
+    const dataToSend = {
+      ...(tagsName != null && { tags: JSON.stringify(tagsName) }),
+      ...(file != null && { bg_image: file }),
+      ...(title != null && { title }),
+      ...(content != null && { content }),
+      ...(typeof isLikedByCurrentUser === 'boolean' && { isLiked: !isLikedByCurrentUser }),
+      ...(typeof isLikedByCurrentUser === 'boolean' && { favoritedBy: currentUserId }),
+    };
+    Object.keys(dataToSend).forEach((key) => {
+      data.append(key, dataToSend[key]);
+    });
     const response = await Axios({
       method: 'PUT',
       url: `http://localhost:8000/edit-post/${postId}`,
-      data: {
-        favoritedBy: currentUserId,
-        isLiked: !isLikedByCurrentUser,
-      },
+      data,
     });
 
-    const isFound = response.data.data.favoriteBy.find((fovoriteBy) => fovoriteBy?.id === currentUserId)?.id;
-    if (isFound === currentUserId) {
-      dispatch(handleSnack({ message: 'Post Liked', isOpen: true }));
+    if (typeof isLikedByCurrentUser === 'boolean') {
+      const isFound = response.data.data.favoriteBy.find((fovoriteBy) => fovoriteBy?.id === currentUserId)?.id;
+      if (isFound === currentUserId) {
+        dispatch(handleSnack({ message: 'Post Liked', isOpen: true }));
+      } else {
+        dispatch(handleSnack({ message: 'Post Unliked', isOpen: true }));
+      }
     } else {
-      dispatch(handleSnack({ message: 'Post Unliked', isOpen: true }));
+      dispatch(handleSnack({ message: response.data.message, isOpen: true }));
     }
     return response.data.data;
   } catch (err) {
     dispatch(handleSnack({ message: err.message, isOpen: true }));
+  }
+});
+export const handleCreatePost = createAsyncThunk('post/handleCreatePost', async (data, thunkApi) => {
+  const { title, content, file, tagsName, currentUserId } = data;
+  const { dispatch } = thunkApi;
+
+  try {
+    const formData = new FormData();
+    const dataToSend = { title, content, tags: JSON.stringify(tagsName), bg_image: file, autherId: currentUserId };
+    Object.keys(dataToSend).forEach((key) => {
+      formData.append(key, dataToSend[key]);
+    });
+    const response = await Axios({ url: 'http://localhost:8000/create-post', method: 'POST', data: formData });
+    dispatch(handleSnack({ isOpen: true, message: response.data.message }));
+    return response.data.data;
+  } catch (err) {
+    dispatch(handleSnack({ isOpen: true, message: err.response.data.message }));
   }
 });
 
@@ -67,15 +97,26 @@ const postsSlice = createSlice({
     builder.addCase(getPosts.rejected, (state) => {
       state.postStatus = 'rejected';
     });
-    // handleFavorite
-    builder.addCase(handleFavorite.pending, (state) => {
+    // handleEditPost
+    builder.addCase(handleEditPost.pending, (state) => {
       state.postStatus = 'pending';
     });
-    builder.addCase(handleFavorite.fulfilled, (state, { payload }) => {
+    builder.addCase(handleEditPost.fulfilled, (state, { payload }) => {
       state.postStatus = 'success';
-      state.posts = state.posts.map((post) => (post.id === payload.id ? payload : post)); // might be change in future versions
+      state.posts = state.posts.map((post) => (post.id === payload.id ? payload : post));
     });
-    builder.addCase(handleFavorite.rejected, (state) => {
+    builder.addCase(handleEditPost.rejected, (state) => {
+      state.postStatus = 'rejected';
+    });
+    // handleCreatePost
+    builder.addCase(handleCreatePost.pending, (state) => {
+      state.postStatus = 'pending';
+    });
+    builder.addCase(handleCreatePost.fulfilled, (state, { payload }) => {
+      state.postStatus = 'success';
+      state.posts = [...state.posts, payload];
+    });
+    builder.addCase(handleCreatePost.rejected, (state) => {
       state.postStatus = 'rejected';
     });
   },

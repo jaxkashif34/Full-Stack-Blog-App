@@ -3,7 +3,6 @@ import { Box, IconButton, Tooltip } from '@mui/material';
 import { AddCircle } from '@mui/icons-material';
 import { styled } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
 const BoxStyles = styled(Box)(({ theme }) => ({
   display: 'flex',
   justifyContent: 'center',
@@ -16,11 +15,10 @@ const BoxStyles = styled(Box)(({ theme }) => ({
   padding: '5rem 0',
 }));
 const AddPost = () => {
-  const { currentUser } = useSelector((state) => state.auth);
   return (
     <BoxStyles>
       <Tooltip title="Add Post" arrow>
-        <Link to={`/add-post/${currentUser?.id}`}>
+        <Link to="/add-post">
           <IconButton>
             <AddCircle sx={{ fontSize: '5rem' }} />
           </IconButton>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Card, CardActions, CardContent, CardMedia, IconButton, Typography } from '@mui/material';
 import { Favorite } from '@mui/icons-material';
-import { handleFavorite } from '../../../store/Posts';
+import { handleEditPost } from '../../../store/Posts';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 const CardForGrid = ({ post }) => {
@@ -13,7 +13,7 @@ const CardForGrid = ({ post }) => {
   const isLikedByCurrentUser = post?.favoriteBy?.find((fovoriteBy) => fovoriteBy?.id === currentUser?.id)?.id === currentUser?.id;
   const handleLike = () => {
     const data = { postId: post?.id, currentUserId: currentUser?.id, isLikedByCurrentUser };
-    dispatch(handleFavorite(data));
+    dispatch(handleEditPost(data));
   };
   return (
     <Card>

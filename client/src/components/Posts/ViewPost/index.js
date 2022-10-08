@@ -1,9 +1,10 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { useSelector,useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Card, CardActions, CardContent, CardMedia, Container, Divider, IconButton, Tooltip, Typography, Stack, Box } from '@mui/material';
 import { Favorite } from '@mui/icons-material';
-import { handleFavorite } from '../../../store/Posts';
+import { handleEditPost } from '../../../store/Posts';
+import EditPostButton from '../EditPostButton';
 const ViewPost = () => {
   const dispatch = useDispatch();
   const { id } = useParams();
@@ -13,16 +14,20 @@ const ViewPost = () => {
   const numberOfLikes = currentPost?.favoriteBy.length;
   const isLikedByCurrentUser = currentPost?.favoriteBy?.find((fovoriteBy) => fovoriteBy?.id === currentUser?.id)?.id === currentUser?.id;
   const handleLike = () => {
-    dispatch(handleFavorite({ postId: currentPost?.id, currentUserId: currentUser?.id, isLikedByCurrentUser }));
+    const data = { postId: currentPost?.id, currentUserId: currentUser?.id, isLikedByCurrentUser };
+    dispatch(handleEditPost(data));
   };
   return (
-    <Container maxWidth="md" sx={{ mt: 3, borderRadius: 3, paddingY: 3, paddingX: 1 }}>
+    <Container maxWidth="md" sx={{ mt: 3, borderRadius: 3, paddingY: 3, paddingX: 1, position: 'relative' }}>
       <Card sx={{ maxWidth: '100%' }}>
         <CardMedia component="img" height="40%" image={currentPost?.bg_image?.secure_url} alt={currentPost?.bg_image?.original_filename} />
         <CardContent>
-          <Typography gutterBottom variant="h4">
-            {currentPost?.title}
-          </Typography>
+          <Stack direction="row" justifyContent="space-between" alignItems="center">
+            <Typography gutterBottom variant="h4" sx={{ display: 'inline-block' }}>
+              {currentPost?.title}
+            </Typography>
+            <EditPostButton />
+          </Stack>
           <Typography variant="h5" color="text.secondary">
             {currentPost?.content}
           </Typography>
@@ -34,7 +39,7 @@ const ViewPost = () => {
               <IconButton onClick={handleLike}>
                 <Favorite sx={{ fill: `${isLikedByCurrentUser && 'red'}` }} />
               </IconButton>
-              <Tooltip title={isLikedByCurrentUser ? (isLikedByCurrentUser && numberOfLikes > 1 ? `you and ${numberOfLikes} more` : `you liked it`) : 'peoples who likes'}>
+              <Tooltip title={isLikedByCurrentUser ? (isLikedByCurrentUser && numberOfLikes > 1 ? `you and ${numberOfLikes - 1} more` : `you liked it`) : 'peoples who likes'}>
                 <Typography sx={{ p: 0.5 }}>{numberOfLikes}</Typography>
               </Tooltip>
             </Box>
