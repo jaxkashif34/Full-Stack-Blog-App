@@ -26,12 +26,13 @@ const CardForGrid = ({ post }) => {
     };
     dispatch(handleDeletePost(data));
   };
+  const isLong = title.length >= 50;
   return (
     <Card>
       <CardMedia component="img" height={140} image={secure_url} alt={original_filename} sx={{ objectFit: 'cover' }} />
       <CardContent>
         <Typography variant="body1" color="inherit">
-          {title}
+          {isLong ? `${title.substr(0, 50)} ...` : `${title}`}
         </Typography>
       </CardContent>
       <CardActions sx={{ justifyContent: 'space-between' }}>

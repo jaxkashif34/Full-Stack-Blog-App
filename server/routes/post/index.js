@@ -92,17 +92,14 @@ const createUser = async (req, res) => {
               },
             },
           },
-          include: {
+          select: {
+            name: true,
+            id: true,
             profile_pic: {
               select: {
                 id: true,
                 secure_url: true,
-                asset_id: true,
-                user: {
-                  select: {
-                    id: true,
-                  },
-                },
+                original_filename: true,
               },
             },
           },
@@ -157,17 +154,15 @@ const loginSignInUser = async (req, res) => {
       where: {
         email: email,
       },
-      include: {
+      select: {
+        name: true,
+        id: true,
+        password: true,
         profile_pic: {
           select: {
             id: true,
             secure_url: true,
-            asset_id: true,
-            user: {
-              select: {
-                id: true,
-              },
-            },
+            original_filename: true,
           },
         },
       },
