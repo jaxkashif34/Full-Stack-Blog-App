@@ -1,3 +1,7 @@
+/**
+ * It renders a grid with two columns, one for the image and the other for the form
+ * @returns A function that returns a JSX element.
+ */
 import { Box, Grid } from '@mui/material';
 import React from 'react';
 import AuthForm from '../form';

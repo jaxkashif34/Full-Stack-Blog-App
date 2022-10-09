@@ -1,3 +1,8 @@
+/**
+ * It takes a file and a setter function as props, and returns a component that displays the file as an
+ * avatar, and allows the user to change the file.
+ * @returns A component that renders an avatar and an input file.
+ */
 import React from 'react';
 import { Box, Avatar } from '@mui/material';
 const UploadPic = ({ profile_pic, setProfile_pic }) => {

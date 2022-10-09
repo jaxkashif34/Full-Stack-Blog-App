@@ -1,3 +1,4 @@
+/* A code snippet. */
 import React from 'react';
 import { Box, Button, Chip, FormControl, Grid, InputLabel, MenuItem, OutlinedInput, Select, Stack, TextareaAutosize } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';

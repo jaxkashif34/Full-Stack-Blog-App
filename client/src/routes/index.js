@@ -1,3 +1,8 @@
+/**
+ * It renders the PrivateRoutes component if the user is logged in, otherwise it renders the Auth
+ * component
+ * @returns A function that returns a JSX element.
+ */
 import React from 'react';
 import Auth from '../components/Auth';
 import SignUp from '../components/Auth/SigUp';

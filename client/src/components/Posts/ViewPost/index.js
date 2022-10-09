@@ -1,3 +1,7 @@
+/**
+ * It's a Component for view single post 
+ * @returns The return value of the function is the value of the last expression in the function body.
+ */
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';

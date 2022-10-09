@@ -1,3 +1,8 @@
+/**
+ * I'm trying to create a post and edit a post.
+ * @returns The return value of the function is the value of the last expression evaluated inside the
+ * function.
+ */
 import React, { useState } from 'react';
 import { Container, Typography } from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux';

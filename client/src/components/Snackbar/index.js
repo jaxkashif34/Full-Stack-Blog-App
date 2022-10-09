@@ -1,3 +1,7 @@
+/**
+ * It's a snackbar that displays a message and then disappears after 2 seconds.
+ * @returns A function that returns a component.
+ */
 import React from 'react';
 import { Snackbar, Slide, IconButton } from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux';

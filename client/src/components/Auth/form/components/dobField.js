@@ -1,3 +1,7 @@
+/**
+ * It's a formik field that takes in a date of birth and validates it
+ * @returns A component that is a text field that is a formik field.
+ */
 import { TextField } from '@mui/material';
 import { Field } from 'formik';
 import React from 'react';

@@ -1,3 +1,4 @@
+/* A query to get all posts from the database. */
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const getAllPosts = async (req, res) => {

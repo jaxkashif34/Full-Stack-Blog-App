@@ -1,5 +1,4 @@
-const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
+/* The above code is a server.js file that is used to create a server. */
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
@@ -12,11 +11,6 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// const main = async () => {
-//   await prisma.post.deleteMany();
-// };
-
-// main();
 // ******************** POSTS ********************
 app.get('/all-posts', getAllPosts);
 

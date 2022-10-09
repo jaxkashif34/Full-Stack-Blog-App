@@ -1,3 +1,4 @@
+/* A redux-toolkit slice. */
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import Axios from 'axios';
 import { handleSnack } from '../UI-Features';

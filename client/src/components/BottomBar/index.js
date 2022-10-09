@@ -1,3 +1,8 @@
+/**
+ * It's a bottom bar that has two buttons, one to toggle dark mode and the other to scroll to the top
+ * of the page
+ * @returns A React component
+ */
 import React from 'react';
 import { IconButton } from '@mui/material';
 import { DarkMode, LightMode, ExpandLess } from '@mui/icons-material';

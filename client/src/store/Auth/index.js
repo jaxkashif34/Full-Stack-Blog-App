@@ -1,3 +1,4 @@
+/* A redux slice. */
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { handleSnack } from '../UI-Features';
 import { removePostOnUserDelete } from '../Posts';

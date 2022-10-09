@@ -1,3 +1,4 @@
+/* A component that is used to add a post. */
 import React from 'react';
 import { Box, IconButton, Tooltip } from '@mui/material';
 import { AddCircle } from '@mui/icons-material';

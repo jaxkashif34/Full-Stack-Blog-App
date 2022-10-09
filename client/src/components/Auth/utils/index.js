@@ -1,3 +1,4 @@
+/* A JavaScript file which has initial values and validation schema for formik. */
 import * as yup from 'yup';
 const signUpInitial = {
   email: '',

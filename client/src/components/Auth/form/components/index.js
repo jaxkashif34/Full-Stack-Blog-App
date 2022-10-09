@@ -1,3 +1,4 @@
+/* Exporting all the components from the folder. */
 export { default as UploadPic } from './uploadPic';
 export { default as NameField } from './nameField';
 export { default as EmailField } from './emailField';

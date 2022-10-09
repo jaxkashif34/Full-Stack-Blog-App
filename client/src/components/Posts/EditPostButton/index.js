@@ -1,3 +1,8 @@
+/**
+ * It takes the id from the url and finds the post with that id in the posts array. Then it returns a
+ * link to the edit page for that post
+ * @returns A function that returns a component.
+ */
 import React from 'react';
 import { Edit } from '@mui/icons-material';
 import { IconButton } from '@mui/material';

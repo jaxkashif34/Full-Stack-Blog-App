@@ -1,3 +1,4 @@
+/* The above code is deleting a post and a user from the database. */
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const deletePost = async (req, res) => {

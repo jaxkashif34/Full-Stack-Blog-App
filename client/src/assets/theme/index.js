@@ -1,3 +1,8 @@
+/**
+ * It's a function that takes in a child component and returns a theme provider that uses the theme
+ * object and the isDark boolean from the redux store to determine the theme.
+ * @returns A function that returns a component.
+ */
 import { ThemeProvider } from '@mui/material/styles';
 import { useMemo } from 'react';
 import { themeObj } from './theme';

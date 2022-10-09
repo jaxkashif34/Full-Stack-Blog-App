@@ -1,3 +1,4 @@
+/* Creating a reducer. */
 import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
   isDark: true,

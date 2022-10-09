@@ -1,3 +1,4 @@
+/* A redux store. */
 import { combineReducers, configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
 import { UIFeaturesSliceReducer } from './UI-Features';
 import { userSliceReducer } from './Auth';

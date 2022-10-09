@@ -1,10 +1,11 @@
+/* The code is a modal component that is used to delete a user. */
 import React from 'react';
 import { Button, Card, Modal as MuiModal, Typography, Stack } from '@mui/material';
 import { handleModal } from '../../store/UI-Features';
 import { useSelector, useDispatch } from 'react-redux';
 import { styled } from '@mui/material/styles';
-import {  handleDeleteUser } from '../../store/Auth';
-import {  handleUserMenu } from '../../store/UI-Features';
+import { handleDeleteUser } from '../../store/Auth';
+import { handleUserMenu } from '../../store/UI-Features';
 import { useNavigate } from 'react-router-dom';
 const BoxStles = styled(Card)(({ theme }) => ({
   position: 'absolute',

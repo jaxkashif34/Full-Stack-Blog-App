@@ -1,3 +1,7 @@
+/**
+ * I'm trying to disable the "Admin" option in the dropdown menu.
+ * @returns A React component that renders a select field with two options.
+ */
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import { Field } from 'formik';
 import React from 'react';

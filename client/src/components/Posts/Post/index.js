@@ -1,3 +1,8 @@
+/**
+ * It's a function that takes a post object as a parameter and returns a card component that displays
+ * the post's title and image.
+ * @returns The return value of the function is the value of the last expression in the function body.
+ */
 import React from 'react';
 import { Button, Card, CardActions, CardContent, CardMedia, IconButton, Tooltip, Typography } from '@mui/material';
 import { Favorite, Delete } from '@mui/icons-material';

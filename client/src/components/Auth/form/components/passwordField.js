@@ -1,3 +1,8 @@
+/**
+ * PasswordField is a function that takes in a data object and returns a Box component that contains a
+ * Field component and an IconButton component.
+ * @returns A React component that is a form field for a password.
+ */
 import React from 'react';
 import { Box, IconButton, TextField } from '@mui/material';
 import { Field } from 'formik';

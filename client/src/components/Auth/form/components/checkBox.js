@@ -1,3 +1,7 @@
+/**
+ * It's a function that returns a FormControlLabel component that contains a Checkbox component
+ * @returns A FormControlLabel component with a Checkbox component as a child.
+ */
 import { Checkbox, FormControlLabel } from '@mui/material';
 import React from 'react';
 

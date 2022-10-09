@@ -1,3 +1,7 @@
+/**
+ * It's a navbar that has a profile icon that opens a menu when clicked.
+ * @returns A React component.
+ */
 import React, { useRef } from 'react';
 import { AppBar, Toolbar, Typography, Box, Menu, MenuItem, Avatar, Tooltip, ListItemIcon } from '@mui/material';
 import { Container } from '@mui/system';

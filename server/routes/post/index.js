@@ -1,3 +1,4 @@
+/* A function that is being exported from the file. */
 const { generateHashPassword, comparePassword } = require('../../utils');
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();

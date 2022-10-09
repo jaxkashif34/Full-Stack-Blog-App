@@ -1,3 +1,7 @@
+/**
+ * It maps over the posts array and returns a GridCard component for each post
+ * @returns An array of objects.
+ */
 import React from 'react';
 import { Container, Grid } from '@mui/material';
 import GridCard from '../Post';

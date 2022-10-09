@@ -1,3 +1,5 @@
+/* The above code is creating a multer middleware that will upload the files to the specified
+directory. */
 const path = require('path');
 const multer = require('multer');
 

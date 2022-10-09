@@ -1,3 +1,8 @@
+/**
+ * It's a function that renders the Nav component, the SnackBar component, the Routes component, the
+ * BottomBar component, and the Modal component
+ * @returns The return value of the function is the value of the last expression in the function body.
+ */
 import Nav from './components/Nav';
 import BottomBar from './components/BottomBar';
 import { getPosts } from './store/Posts';

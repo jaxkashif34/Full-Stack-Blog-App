@@ -1,3 +1,9 @@
+/**
+ * It's a form that takes in a form type as a prop and renders the appropriate form fields based on the
+ * form type.
+ * @returns The return value of the function is the value of the last expression evaluated inside the
+ * function.
+ */
 import React, { useState } from 'react';
 import { Formik, Form } from 'formik';
 import { Stack, Box, Grid, Typography } from '@mui/material';
