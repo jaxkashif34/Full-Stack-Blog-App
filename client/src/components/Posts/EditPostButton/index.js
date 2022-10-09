@@ -13,7 +13,7 @@ const EditPostButton = () => {
   const { posts } = useSelector((state) => state.post);
   const currentPost = posts.find((post) => post.id === id);
   return (
-    <Link to={`/edit-post/${currentPost.id}`}>
+    <Link to={`/edit-post/${currentPost?.id}`}>
       <IconButton sx={{ display: 'inline-block' }}>
         <Edit />
       </IconButton>
