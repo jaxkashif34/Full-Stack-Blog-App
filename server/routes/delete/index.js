@@ -8,9 +8,9 @@ const deletePost = async (req, res) => {
         id: postId,
       },
     });
-    res.send('Post deleted successfully');
+    res.json({ message: 'Post deleted successfully' });
   } catch (e) {
-    res.send(JSON.stringify(e));
+    res.status(400).json({ message: 'Error deleting post', error: e });
   }
 };
 

@@ -7,7 +7,7 @@ const { upload } = require('./server/middleware');
 const { createPost, createUser, loginSignInUser } = require('./server/routes/post');
 const { editPost, editUser } = require('./server/routes/put');
 const { deletePost, deleteUser } = require('./server/routes/delete');
-const { getAllPosts, getSignlePost } = require('./server/routes/get');
+const { getAllPosts } = require('./server/routes/get');
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -21,8 +21,6 @@ app.use(express.json());
 app.get('/all-posts', getAllPosts);
 
 app.post('/create-post', upload.single('bg_image'), createPost);
-// fetching single post
-app.get('/single-post/:id', getSignlePost);
 
 // Delete post
 app.delete('/delete-post/:id', deletePost);

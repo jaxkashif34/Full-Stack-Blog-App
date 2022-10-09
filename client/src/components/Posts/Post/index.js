@@ -1,7 +1,7 @@
 import React from 'react';
-import { Button, Card, CardActions, CardContent, CardMedia, IconButton, Typography } from '@mui/material';
-import { Favorite } from '@mui/icons-material';
-import { handleEditPost } from '../../../store/Posts';
+import { Button, Card, CardActions, CardContent, CardMedia, IconButton, Tooltip, Typography } from '@mui/material';
+import { Favorite, Delete } from '@mui/icons-material';
+import { handleEditPost, handleDeletePost } from '../../../store/Posts';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 const CardForGrid = ({ post }) => {
@@ -15,6 +15,12 @@ const CardForGrid = ({ post }) => {
     const data = { postId: post?.id, currentUserId: currentUser?.id, isLikedByCurrentUser };
     dispatch(handleEditPost(data));
   };
+  const handleRemovePost = () => {
+    const data = {
+      postId: post.id,
+    };
+    dispatch(handleDeletePost(data));
+  };
   return (
     <Card>
       <CardMedia component="img" height={140} image={secure_url} alt={original_filename} sx={{ objectFit: 'cover' }} />
@@ -23,15 +29,22 @@ const CardForGrid = ({ post }) => {
           {title}
         </Typography>
       </CardContent>
-      <CardActions>
-        <IconButton onClick={handleLike}>
-          <Favorite sx={{ fill: `${isLikedByCurrentUser && 'red'}` }} />
-        </IconButton>
+      <CardActions sx={{ justifyContent: 'space-between' }}>
+        <Tooltip title={`${!isLikedByCurrentUser ? 'Like' : 'Unlike'}  Post`}>
+          <IconButton onClick={handleLike}>
+            <Favorite sx={{ fill: `${isLikedByCurrentUser && 'red'}` }} />
+          </IconButton>
+        </Tooltip>
         <Link to={`/view-post/${post?.id}`} style={{ color: 'inherit', textDecoration: 'none' }}>
           <Button disableRipple color="inherit" sx={{ textTransform: 'none' }}>
             read more
           </Button>
         </Link>
+        <Tooltip title="Delete Post">
+          <IconButton onClick={handleRemovePost}>
+            <Delete />
+          </IconButton>
+        </Tooltip>
       </CardActions>
     </Card>
   );

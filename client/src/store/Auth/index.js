@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { handleSnack } from '../UI-Features';
-import { removePost } from '../Posts';
+import { removePostOnUserDelete } from '../Posts';
 import Axios from 'axios';
 import storage from 'redux-persist/lib/storage';
 
@@ -92,7 +92,7 @@ export const handleDeleteUser = createAsyncThunk('auth/handleDeleteUser', async 
       url: `http://localhost:8000/delete-user/${currentUserId}`,
     });
     dispatch(logOutUser());
-    dispatch(removePost(currentUserId));
+    dispatch(removePostOnUserDelete(currentUserId));
     dispatch(handleSnack({ isOpen: true, message: response.data.message }));
   } catch (err) {
     dispatch(handleSnack({ isOpen: true, message: err.response.data.message }));

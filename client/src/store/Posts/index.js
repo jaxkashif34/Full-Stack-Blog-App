@@ -5,7 +5,7 @@ export const getPosts = createAsyncThunk('post/getPosts', async (data, thunkApi)
   const { dispatch } = thunkApi;
   try {
     const response = await Axios.get('http://localhost:8000/all-posts');
-    return response.data;
+    return response.data.data;
   } catch (err) {
     dispatch(handleSnack({ isOpen: true, message: err.response.data.message }));
   }
@@ -65,11 +65,21 @@ export const handleCreatePost = createAsyncThunk('post/handleCreatePost', async 
     dispatch(handleSnack({ isOpen: true, message: err.response.data.message }));
   }
 });
+export const handleDeletePost = createAsyncThunk('post/handleDeletePost', async (data, thunkApi) => {
+  const { postId } = data;
+  const { dispatch } = thunkApi;
+  try {
+    const response = await Axios({ method: 'DELETE', url: `http://localhost:8000/delete-post/${postId}` });
+    dispatch(handleSnack({ isOpen: true, message: response.data.message }));
+    return postId;
+  } catch (err) {
+    dispatch(handleSnack({ isOpen: true, message: err.response.data.message }));
+  }
+});
 
 const initialState = {
   posts: [],
   postStatus: false,
-  favoriteStatus: '',
 };
 
 const postsSlice = createSlice({
@@ -79,7 +89,7 @@ const postsSlice = createSlice({
     setPosts: (state, { payload }) => {
       state.posts = [...state.posts, payload];
     },
-    removePost: (state, { payload }) => {
+    removePostOnUserDelete: (state, { payload }) => {
       state.posts = state.posts.filter((post) => post.autherId !== payload);
     },
     setLikedPosts: (state, { payload }) => {
@@ -87,6 +97,7 @@ const postsSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    // fetch All Posts
     builder.addCase(getPosts.pending, (state) => {
       state.postStatus = 'pending';
     });
@@ -119,8 +130,19 @@ const postsSlice = createSlice({
     builder.addCase(handleCreatePost.rejected, (state) => {
       state.postStatus = 'rejected';
     });
+    // handleDeletePost
+    builder.addCase(handleDeletePost.pending, (state) => {
+      state.postStatus = 'pending';
+    });
+    builder.addCase(handleDeletePost.fulfilled, (state, { payload }) => {
+      state.postStatus = 'success';
+      state.posts = state.posts.filter((post) => post.id !== payload);
+    });
+    builder.addCase(handleDeletePost.rejected, (state) => {
+      state.postStatus = 'rejected';
+    });
   },
 });
 
-export const { setPosts, removePost, setLikedPosts } = postsSlice.actions;
+export const { setPosts, removePostOnUserDelete, setLikedPosts } = postsSlice.actions;
 export default postsSlice.reducer;

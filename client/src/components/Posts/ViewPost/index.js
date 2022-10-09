@@ -11,7 +11,7 @@ const ViewPost = () => {
   const { posts } = useSelector((state) => state.post);
   const { currentUser } = useSelector((state) => state.auth);
   const currentPost = posts.find((post) => post.id === id);
-  const numberOfLikes = currentPost?.favoriteBy.length;
+  const numberOfLikes = currentPost?.favoriteBy?.length;
   const isLikedByCurrentUser = currentPost?.favoriteBy?.find((fovoriteBy) => fovoriteBy?.id === currentUser?.id)?.id === currentUser?.id;
   const handleLike = () => {
     const data = { postId: currentPost?.id, currentUserId: currentUser?.id, isLikedByCurrentUser };

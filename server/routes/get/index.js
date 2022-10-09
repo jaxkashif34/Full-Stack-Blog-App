@@ -29,18 +29,4 @@ const getAllPosts = async (req, res) => {
   }
 };
 
-const getSignlePost = async (req, res) => {
-  const postId = req.params.id;
-  try {
-    const singlePost = await prisma.post.findUnique({
-      where: {
-        id: postId,
-      },
-    });
-    res.send(singlePost);
-  } catch (e) {
-    res.send(JSON.stringify(e));
-  }
-};
-
-module.exports = { getAllPosts, getSignlePost };
+module.exports = { getAllPosts };
