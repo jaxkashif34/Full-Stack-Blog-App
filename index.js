@@ -34,4 +34,4 @@ app.delete('/delete-user/:id', deleteUser);
 app.put('/edit-user/:id', upload.single('profile_pic'), editUser);
 
 const PORT = process.env.PORT;
-app.listen(PORT, () => console.log(`⚡️ Server is up on https://localhost:${PORT}`));
+app.listen(PORT, () => console.log(`⚡️ Server is up on http://localhost:${PORT}`));
