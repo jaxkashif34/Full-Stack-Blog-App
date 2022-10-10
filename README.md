@@ -55,7 +55,7 @@ An Amazing Blog App  where you can do CRUD operations on User and Blogs and also
 - Prisma Client
 
 # Installation
- - You need to start both servers fron-end and back-end to properly work properly
+ - You need to start both servers fron-end and back-end to work properly..
 # Front-End
 
 ```bash
