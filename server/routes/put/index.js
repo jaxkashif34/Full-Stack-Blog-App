@@ -11,7 +11,7 @@ const editPost = async (req, res) => {
   try {
     let imgData;
     if (file != null) {
-      const result = await uploadToCloudinary(file.path);
+      const result = await uploadToCloudinary(file);
       const { width, height, asset_id, created_at, bytes, secure_url, original_filename } = result;
       imgData = {
         width,
@@ -121,11 +121,9 @@ const editUser = async (req, res) => {
               },
             }),
           },
-          ...(imgData != null && {
-            include: {
-              profile_pic: true,
-            },
-          }),
+          include: {
+            profile_pic: true,
+          },
         });
 
         resolve(updatedUser);
@@ -136,7 +134,7 @@ const editUser = async (req, res) => {
   };
   let imgData;
   if (file != null) {
-    const result = await uploadToCloudinary(file.path);
+    const result = await uploadToCloudinary(file);
     const { width, height, asset_id, created_at, bytes, secure_url, original_filename } = result;
     imgData = {
       width,

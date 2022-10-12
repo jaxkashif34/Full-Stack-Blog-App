@@ -43,7 +43,7 @@ const createPost = async (req, res) => {
     });
   };
 
-  uploadToCloudinary(file?.path)
+  uploadToCloudinary(file)
     .then(async (result) => {
       const imgObj = {
         width: result.width,
@@ -106,13 +106,12 @@ const createUser = async (req, res) => {
         });
         resolve(createdUser);
       } catch (e) {
-        console.log(e);
         reject(e);
       }
     });
   };
 
-  uploadToCloudinary(file?.path)
+  uploadToCloudinary(file)
     .then(async (result) => {
       const { width, height, asset_id, created_at, bytes, secure_url, original_filename } = result;
       const imgData = {

@@ -12,16 +12,24 @@ const AllBlogs = () => {
   return (
     <Container maxWidth="lg" sx={{ mt: 5, mb: 5 }}>
       <Grid container spacing={3}>
-        {posts.map((post) => {
-          return (
-            <Grid item xs={12} md={6} lg={3} key={post.id}>
-              <GridCard post={post} />
+        {posts.length !== 0 ? (
+          <>
+            {posts.map((post) => {
+              return (
+                <Grid item xs={12} md={6} lg={3} key={post.id}>
+                  <GridCard post={post} />
+                </Grid>
+              );
+            })}
+            <Grid item xs={12} md={6} lg={3}>
+              <AddPost />
             </Grid>
-          );
-        })}
-        <Grid item xs={12} md={6} lg={3}>
-          <AddPost />
-        </Grid>
+          </>
+        ) : (
+          <Grid item xs={12} md={6} lg={3}>
+            <AddPost />
+          </Grid>
+        )}
       </Grid>
     </Container>
   );

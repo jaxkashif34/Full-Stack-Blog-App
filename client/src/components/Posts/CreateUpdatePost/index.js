@@ -23,7 +23,7 @@ const AddPost = () => {
   const [post, setPost] = useState({ title: '', content: '' });
   const [picture, setPicture] = useState({ file: null, path: '' });
   const [loading, setLoading] = useState(false);
-  const currentPost = posts.find((post) => post.id === postId);
+  const currentPost = posts.find((post) => post?.id === postId);
   const handleChange = (event) => {
     const {
       target: { value },

@@ -28,7 +28,8 @@ const AuthForm = ({ form }) => {
         setSubmitting,
         values,
       };
-      await dispatch(handleSignUp(data));
+      const result = await dispatch(handleSignUp(data));
+      if (result.payload == null) return;
       navigate('/');
     } else if (form === 'signin') {
       const data = {
