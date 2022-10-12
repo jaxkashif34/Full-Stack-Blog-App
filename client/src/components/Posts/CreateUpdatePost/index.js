@@ -87,7 +87,7 @@ const AddPost = () => {
       setPost({ title: currentPost?.title, content: currentPost?.content });
       setPicture({ file: null, path: currentPost?.bg_image?.secure_url });
     }
-  }, [postId]);
+  }, [postId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <Container sx={{ padding: 2, borderRadius: 3 }}>
