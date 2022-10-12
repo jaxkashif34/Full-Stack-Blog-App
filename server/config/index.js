@@ -2,6 +2,10 @@
 const cloudinary = require('cloudinary').v2;
 const dotenv = require('dotenv');
 dotenv.config();
+
+if (typeof (process.env.CLOUDINARY_CLOUD_NAME === 'undefined' || process.env.CLOUDINARY_API_KEY === 'undefined' || process.env.CLOUDINARY_API_SECRET === 'undefined')) {
+  console.warn('!! cloudinary config is undefined !!');
+}
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
