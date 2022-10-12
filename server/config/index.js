@@ -14,7 +14,9 @@ const options = {
   overwrite: true,
 };
 
-const uploadToCloudinary = (path = 'https://image.shutterstock.com/image-vector/default-word-digital-style-glowing-260nw-1668796114.jpg') => {
+const deafultPath = 'https://image.shutterstock.com/image-vector/default-word-digital-style-glowing-260nw-1668796114.jpg';
+
+const uploadToCloudinary = (path = deafultPath) => {
   return new Promise((resolve, reject) => {
     cloudinary.uploader.upload(path, options, (err, result) => {
       if (err) {

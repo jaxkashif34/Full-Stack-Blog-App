@@ -45,13 +45,13 @@ const PostForm = ({ data }) => {
   const theme = useTheme();
   function getStyles(tag, tagName, theme) {
     return {
-      fontWeight: tagName.indexOf(tag) === -1 ? theme.typography.fontWeightRegular : theme.typography.fontWeightMedium,
+      fontWeight: tagName?.indexOf(tag) === -1 ? theme.typography.fontWeightRegular : theme.typography.fontWeightMedium,
     };
   }
   return (
     <>
       <UploadImage>
-        {picture.file == null ? (
+        {picture.path === '' ? (
           <Button component="label">
             Upload
             <input

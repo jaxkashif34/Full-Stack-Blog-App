@@ -3,7 +3,7 @@
  * @returns The return value of the function is the value of the last expression evaluated inside the
  * function.
  */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Container, Typography } from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux';
 import { handleCreatePost, handleEditPost } from '../../../store/Posts';
@@ -15,19 +15,20 @@ const AddPost = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.auth);
+  const { posts } = useSelector((state) => state.post);
   const { pathname } = useLocation();
   const isAddPost = pathname.split('/')[1] === 'add-post';
   const postId = pathname.split('/')[2];
-  const [tagsName, setTageName] = useState(['new']);
+  const [tagsName, setTagsName] = useState(['new']);
   const [post, setPost] = useState({ title: '', content: '' });
   const [picture, setPicture] = useState({ file: null, path: '' });
   const [loading, setLoading] = useState(false);
-
+  const currentPost = posts.find((post) => post.id === postId);
   const handleChange = (event) => {
     const {
       target: { value },
     } = event;
-    setTageName(
+    setTagsName(
       // On autofill we get a stringified value.
       typeof value === 'string' ? value.split(',') : value
     );
@@ -79,6 +80,14 @@ const AddPost = () => {
       }
     }
   };
+
+  useEffect(() => {
+    if (!isAddPost) {
+      setTagsName(currentPost?.tags);
+      setPost({ title: currentPost?.title, content: currentPost?.content });
+      setPicture({ file: null, path: currentPost?.bg_image?.secure_url });
+    }
+  }, [postId]);
 
   return (
     <Container sx={{ padding: 2, borderRadius: 3 }}>
