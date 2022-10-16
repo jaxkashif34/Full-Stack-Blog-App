@@ -135,6 +135,7 @@ const createUser = async (req, res) => {
           res.send({ message: `Welcome ${name}`, data: result });
         })
         .catch((err) => {
+          console.log(err)
           res.status(404).send({ message: 'Error in saving user', error: err.message });
         });
     })
