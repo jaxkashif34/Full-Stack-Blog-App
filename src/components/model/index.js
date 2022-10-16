@@ -22,7 +22,7 @@ const Modal = () => {
   const { currentUser } = useSelector((state) => state.auth);
   const handleDelete = async () => {
     const data = {
-      currentUserId: currentUser.id,
+      currentUserId: currentUser?.id,
     };
     dispatch(handleModal(false));
     dispatch(handleUserMenu(false));

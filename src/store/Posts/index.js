@@ -7,9 +7,9 @@ export const getPosts = createAsyncThunk('post/getPosts', async (data, thunkApi)
   const { dispatch } = thunkApi;
   try {
     const response = await Axios.get(`${API_ROUTE}/all-posts`);
-    return response.data.data;
+    return response?.data?.data;
   } catch (err) {
-    dispatch(handleSnack({ isOpen: true, message: err.response.data.message }));
+    dispatch(handleSnack({ isOpen: true, message: err?.response?.data?.message }));
   }
 });
 
@@ -36,18 +36,18 @@ export const handleEditPost = createAsyncThunk('post/handleFavorite', async (dat
     });
 
     if (typeof isLikedByCurrentUser === 'boolean') {
-      const isFound = response.data.data.favoriteBy.find((fovoriteBy) => fovoriteBy?.id === currentUserId)?.id;
+      const isFound = response?.data?.data?.favoriteBy?.find((fovoriteBy) => fovoriteBy?.id === currentUserId)?.id;
       if (isFound === currentUserId) {
         dispatch(handleSnack({ message: 'Post Liked', isOpen: true }));
       } else {
         dispatch(handleSnack({ message: 'Post Unliked', isOpen: true }));
       }
     } else {
-      dispatch(handleSnack({ message: response.data.message, isOpen: true }));
+      dispatch(handleSnack({ message: response?.data?.message, isOpen: true }));
     }
-    return response.data.data;
+    return response?.data?.data;
   } catch (err) {
-    dispatch(handleSnack({ message: err.message, isOpen: true }));
+    dispatch(handleSnack({ message: err?.message, isOpen: true }));
   }
 });
 export const handleCreatePost = createAsyncThunk('post/handleCreatePost', async (data, thunkApi) => {
@@ -61,10 +61,10 @@ export const handleCreatePost = createAsyncThunk('post/handleCreatePost', async 
       formData.append(key, dataToSend[key]);
     });
     const response = await Axios({ url: `${API_ROUTE}/create-post`, method: 'POST', data: formData });
-    dispatch(handleSnack({ isOpen: true, message: response.data.message }));
-    return response.data.data;
+    dispatch(handleSnack({ isOpen: true, message: response?.data?.message }));
+    return response?.data?.data;
   } catch (err) {
-    dispatch(handleSnack({ isOpen: true, message: err.response.data.message }));
+    dispatch(handleSnack({ isOpen: true, message: err.response?.data?.message }));
   }
 });
 export const handleDeletePost = createAsyncThunk('post/handleDeletePost', async (data, thunkApi) => {
@@ -72,10 +72,10 @@ export const handleDeletePost = createAsyncThunk('post/handleDeletePost', async 
   const { dispatch } = thunkApi;
   try {
     const response = await Axios({ method: 'DELETE', url: `${API_ROUTE}/delete-post/${postId}` });
-    dispatch(handleSnack({ isOpen: true, message: response.data.message }));
+    dispatch(handleSnack({ isOpen: true, message: response?.data?.message }));
     return postId;
   } catch (err) {
-    dispatch(handleSnack({ isOpen: true, message: err.response.data.message }));
+    dispatch(handleSnack({ isOpen: true, message: err?.response?.data?.message }));
   }
 });
 

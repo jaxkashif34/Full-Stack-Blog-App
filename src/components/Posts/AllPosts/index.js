@@ -14,7 +14,7 @@ const AllBlogs = () => {
       <Grid container spacing={3}>
         {posts?.length !== 0 ? (
           <>
-            {posts.map((post) => {
+            {posts?.map((post) => {
               return (
                 <Grid item xs={12} md={6} lg={3} key={post.id}>
                   <GridCard post={post} />

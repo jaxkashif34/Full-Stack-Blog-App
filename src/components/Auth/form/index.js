@@ -43,7 +43,7 @@ const AuthForm = ({ form }) => {
         setSubmitting,
         values,
         profile_pic: profile_pic.file,
-        currentUserId: currentUser.id,
+        currentUserId: currentUser?.id,
       };
       await dispatch(handleUpdateUser(data));
       navigate('/');

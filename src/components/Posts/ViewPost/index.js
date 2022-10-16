@@ -14,7 +14,7 @@ const ViewPost = () => {
   const { id } = useParams();
   const { posts } = useSelector((state) => state.post);
   const { currentUser } = useSelector((state) => state.auth);
-  const currentPost = posts.find((post) => post.id === id);
+  const currentPost = posts?.find((post) => post?.id === id);
   const numberOfLikes = currentPost?.favoriteBy?.length;
   const isLikedByCurrentUser = currentPost?.favoriteBy?.find((fovoriteBy) => fovoriteBy?.id === currentUser?.id)?.id === currentUser?.id;
   const handleLike = () => {

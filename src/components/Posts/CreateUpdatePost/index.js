@@ -17,20 +17,20 @@ const AddPost = () => {
   const { currentUser } = useSelector((state) => state.auth);
   const { posts } = useSelector((state) => state.post);
   const { pathname } = useLocation();
-  const isAddPost = pathname.split('/')[1] === 'add-post';
-  const postId = pathname.split('/')[2];
+  const isAddPost = pathname?.split('/')[1] === 'add-post';
+  const postId = pathname?.split('/')[2];
   const [tagsName, setTagsName] = useState(['new']);
   const [post, setPost] = useState({ title: '', content: '' });
   const [picture, setPicture] = useState({ file: null, path: '' });
   const [loading, setLoading] = useState(false);
-  const currentPost = posts.find((post) => post?.id === postId);
+  const currentPost = posts?.find((post) => post?.id === postId);
   const handleChange = (event) => {
     const {
       target: { value },
     } = event;
     setTagsName(
       // On autofill we get a stringified value.
-      typeof value === 'string' ? value.split(',') : value
+      typeof value === 'string' ? value?.split(',') : value
     );
   };
   const handleChangeProfile = (file) => {
@@ -48,8 +48,8 @@ const AddPost = () => {
   };
 
   const handlePost = async () => {
-    const isTitleEmpty = post.title === '';
-    const isContentEmpty = post.content === '';
+    const isTitleEmpty = post?.title === '';
+    const isContentEmpty = post?.content === '';
     if (isTitleEmpty || isContentEmpty) {
       dispatch(handleSnack({ message: `Please Add ${isTitleEmpty && 'Title'} ${isContentEmpty && 'Body'} ${isTitleEmpty && isContentEmpty && 'Title & Body'}`, isOpen: true }));
     } else if (!(isTitleEmpty && isContentEmpty)) {
@@ -60,7 +60,7 @@ const AddPost = () => {
           content: post.content,
           file: picture.file,
           tagsName,
-          currentUserId: currentUser.id,
+          currentUserId: currentUser?.id,
         };
         await dispatch(handleCreatePost(data));
         setLoading(false);

@@ -22,7 +22,7 @@ const CardForGrid = ({ post }) => {
   };
   const handleRemovePost = () => {
     const data = {
-      postId: post.id,
+      postId: post?.id,
     };
     dispatch(handleDeletePost(data));
   };

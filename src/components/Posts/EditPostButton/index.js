@@ -11,7 +11,7 @@ import { useSelector } from 'react-redux';
 const EditPostButton = () => {
   const { id } = useParams();
   const { posts } = useSelector((state) => state.post);
-  const currentPost = posts.find((post) => post.id === id);
+  const currentPost = posts?.find((post) => post?.id === id);
   return (
     <Link to={`/edit-post/${currentPost?.id}`}>
       <IconButton sx={{ display: 'inline-block' }}>

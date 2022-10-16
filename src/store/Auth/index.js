@@ -23,18 +23,18 @@ export const handleSignUp = createAsyncThunk('auth/handleForm', async (data, thu
         method: 'POST',
         data,
       });
-      dispatch(handleSnack({ isOpen: true, message: response.data.message }));
-      return response.data.data;
+      dispatch(handleSnack({ isOpen: true, message: response?.data?.message }));
+      return response?.data?.data;
     } else {
       dispatch(handleSnack({ isOpen: true, message: 'Please select a profile picture' }));
     }
     setSubmitting(false);
   } catch (err) {
     setSubmitting(false);
-    if (err.response.data.error.indexOf('Unique constraint failed on the fields: (`email`)') !== -1) {
+    if (err?.response?.data?.error?.indexOf('Unique constraint failed on the fields: (`email`)') !== -1) {
       dispatch(handleSnack({ isOpen: true, message: 'Email already exists' }));
     } else {
-      dispatch(handleSnack({ isOpen: true, message: err.response.data.message }));
+      dispatch(handleSnack({ isOpen: true, message: err?.response?.data?.message }));
     }
   }
 });
@@ -49,11 +49,11 @@ export const handleLogin = createAsyncThunk('auth/handleLogin', async (data, thu
       method: 'POST',
       data: values,
     });
-    dispatch(handleSnack({ isOpen: true, message: response.data.message }));
+    dispatch(handleSnack({ isOpen: true, message: response?.data?.message }));
     setSubmitting(false);
-    return response.data.data;
+    return response?.data?.data;
   } catch (err) {
-    dispatch(handleSnack({ isOpen: true, message: err.message }));
+    dispatch(handleSnack({ isOpen: true, message: err?.message }));
     setSubmitting(false);
   }
 });
@@ -75,11 +75,11 @@ export const handleUpdateUser = createAsyncThunk('auth/handleUpdateUser', async 
       method: 'PUT',
       data,
     });
-    dispatch(handleSnack({ isOpen: true, message: response.data.message }));
+    dispatch(handleSnack({ isOpen: true, message: response?.data?.message }));
     setSubmitting(false);
-    return response.data.data;
+    return response?.data?.data;
   } catch (err) {
-    dispatch(handleSnack({ isOpen: true, message: err.response.data.message }));
+    dispatch(handleSnack({ isOpen: true, message: err.response?.data?.message }));
   }
 });
 
@@ -94,9 +94,9 @@ export const handleDeleteUser = createAsyncThunk('auth/handleDeleteUser', async 
     });
     dispatch(logOutUser());
     dispatch(removePostOnUserDelete(currentUserId));
-    dispatch(handleSnack({ isOpen: true, message: response.data.message }));
+    dispatch(handleSnack({ isOpen: true, message: response?.data?.message }));
   } catch (err) {
-    dispatch(handleSnack({ isOpen: true, message: err.response.data.message }));
+    dispatch(handleSnack({ isOpen: true, message: err?.response?.data?.message }));
   }
 });
 const userSlice = createSlice({
@@ -140,7 +140,7 @@ const userSlice = createSlice({
     });
     builder.addCase(handleUpdateUser.fulfilled, (state, { payload }) => {
       state.userStatus = 'success';
-      state.currentUser = state.currentUser.id === payload.id ? payload : state.currentUser;
+      state.currentUser = state?.currentUser?.id === payload.id ? payload : state?.currentUser;
     });
     builder.addCase(handleUpdateUser.rejected, (state) => {
       state.userStatus = 'rejected';
