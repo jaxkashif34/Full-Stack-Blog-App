@@ -14,7 +14,7 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'build')));
 
 app.post('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'build'));
+  res.sendFile(path.join(__dirname, 'build/index.html'));
 });
 
 // ******************** POSTS ********************
