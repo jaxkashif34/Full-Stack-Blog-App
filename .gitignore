@@ -2,5 +2,4 @@
 /client/node_modules
 /client/.env
 /.env
-/server/uploads/bg_image/*
-/server/uploads/profile_pic/*
+/build

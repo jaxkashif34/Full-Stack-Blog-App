@@ -4,7 +4,7 @@ import { handleSnack } from '../UI-Features';
 import { removePostOnUserDelete } from '../Posts';
 import Axios from 'axios';
 import storage from 'redux-persist/lib/storage';
-
+import { API_ROUTE } from '../utils';
 export const handleSignUp = createAsyncThunk('auth/handleForm', async (data, thunkApi) => {
   const { profile_pic, setSubmitting, values } = data;
   const { dispatch } = thunkApi;
@@ -19,7 +19,7 @@ export const handleSignUp = createAsyncThunk('auth/handleForm', async (data, thu
     });
     if (profile_pic !== null) {
       const response = await Axios({
-        url: 'http://localhost:8000/sign-up',
+        url: `${API_ROUTE}/sign-up`,
         method: 'POST',
         data,
       });
@@ -45,7 +45,7 @@ export const handleLogin = createAsyncThunk('auth/handleLogin', async (data, thu
 
   try {
     const response = await Axios({
-      url: 'http://localhost:8000/log-in',
+      url: `${API_ROUTE}/log-in`,
       method: 'POST',
       data: values,
     });
@@ -71,7 +71,7 @@ export const handleUpdateUser = createAsyncThunk('auth/handleUpdateUser', async 
       data.append(key, uploadedData[key]);
     });
     const response = await Axios({
-      url: `http://localhost:8000/edit-user/${currentUserId}`,
+      url: `${API_ROUTE}/edit-user/${currentUserId}`,
       method: 'PUT',
       data,
     });
@@ -90,7 +90,7 @@ export const handleDeleteUser = createAsyncThunk('auth/handleDeleteUser', async 
   try {
     const response = await Axios({
       method: 'DELETE',
-      url: `http://localhost:8000/delete-user/${currentUserId}`,
+      url: `${API_ROUTE}/delete-user/${currentUserId}`,
     });
     dispatch(logOutUser());
     dispatch(removePostOnUserDelete(currentUserId));

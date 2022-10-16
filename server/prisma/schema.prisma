@@ -3,7 +3,6 @@
 
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["fullTextSearch"]
 }
 
 datasource db {
@@ -48,7 +47,6 @@ model Post {
   bg_image   Bg_Image?
   auther     User       @relation("WrittenPost", fields: [autherId], references: [id], onDelete: Cascade)
   favoriteBy User[]
-  categories Categoty[]
 }
 
 model Bg_Image {
@@ -64,17 +62,6 @@ model Bg_Image {
   postId            String @unique
 }
 
-model Categoty {
-  id    String       @id @default(uuid())
-  name  categoryRole @unique @default(General)
-  posts Post[]
-}
-
-enum categoryRole {
-  Programming
-  General
-  Memes
-}
 
 enum Role {
   AUTHER

@@ -33,6 +33,12 @@ const createPost = async (req, res) => {
           },
           include: {
             bg_image: true,
+            auther: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
           },
         });
 

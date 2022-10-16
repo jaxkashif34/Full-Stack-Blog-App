@@ -2,10 +2,11 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import Axios from 'axios';
 import { handleSnack } from '../UI-Features';
+import {API_ROUTE} from "../utils"
 export const getPosts = createAsyncThunk('post/getPosts', async (data, thunkApi) => {
   const { dispatch } = thunkApi;
   try {
-    const response = await Axios.get('http://localhost:8000/all-posts');
+    const response = await Axios.get(`${API_ROUTE}/all-posts`);
     return response.data.data;
   } catch (err) {
     dispatch(handleSnack({ isOpen: true, message: err.response.data.message }));
@@ -30,7 +31,7 @@ export const handleEditPost = createAsyncThunk('post/handleFavorite', async (dat
     });
     const response = await Axios({
       method: 'PUT',
-      url: `http://localhost:8000/edit-post/${postId}`,
+      url: `${API_ROUTE}/edit-post/${postId}`,
       data,
     });
 
@@ -59,7 +60,7 @@ export const handleCreatePost = createAsyncThunk('post/handleCreatePost', async 
     Object.keys(dataToSend).forEach((key) => {
       formData.append(key, dataToSend[key]);
     });
-    const response = await Axios({ url: 'http://localhost:8000/create-post', method: 'POST', data: formData });
+    const response = await Axios({ url: `${API_ROUTE}/create-post`, method: 'POST', data: formData });
     dispatch(handleSnack({ isOpen: true, message: response.data.message }));
     return response.data.data;
   } catch (err) {
@@ -70,7 +71,7 @@ export const handleDeletePost = createAsyncThunk('post/handleDeletePost', async 
   const { postId } = data;
   const { dispatch } = thunkApi;
   try {
-    const response = await Axios({ method: 'DELETE', url: `http://localhost:8000/delete-post/${postId}` });
+    const response = await Axios({ method: 'DELETE', url: `${API_ROUTE}/delete-post/${postId}` });
     dispatch(handleSnack({ isOpen: true, message: response.data.message }));
     return postId;
   } catch (err) {
