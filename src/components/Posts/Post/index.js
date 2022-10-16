@@ -26,7 +26,7 @@ const CardForGrid = ({ post }) => {
     };
     dispatch(handleDeletePost(data));
   };
-  const isLong = title.length >= 50;
+  const isLong = title?.length >= 50;
   return (
     <Card>
       <CardMedia component="img" height={140} image={secure_url} alt={original_filename} sx={{ objectFit: 'cover' }} />

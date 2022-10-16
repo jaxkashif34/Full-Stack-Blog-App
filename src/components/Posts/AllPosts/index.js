@@ -12,7 +12,7 @@ const AllBlogs = () => {
   return (
     <Container maxWidth="lg" sx={{ mt: 5, mb: 5 }}>
       <Grid container spacing={3}>
-        {posts.length !== 0 ? (
+        {posts?.length !== 0 ? (
           <>
             {posts.map((post) => {
               return (
