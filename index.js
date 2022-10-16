@@ -8,8 +8,14 @@ const { editPost, editUser } = require('./server/routes/put');
 const { deletePost, deleteUser } = require('./server/routes/delete');
 const { getAllPosts } = require('./server/routes/get');
 const app = express();
+const path = require('path');
 app.use(cors());
 app.use(express.json());
+app.use(express.static(path.join(__dirname, 'build')));
+
+app.post('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'build'));
+});
 
 // ******************** POSTS ********************
 app.get('/all-posts', getAllPosts);
