@@ -2,13 +2,15 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import Axios from 'axios';
 import { handleSnack } from '../UI-Features';
-import {API_ROUTE} from "../utils"
+import { API_ROUTE } from '../utils';
 export const getPosts = createAsyncThunk('post/getPosts', async (data, thunkApi) => {
   const { dispatch } = thunkApi;
   try {
     const response = await Axios.get(`${API_ROUTE}/all-posts`);
+    console.log('Fetched Posts', response?.data?.data);
     return response?.data?.data;
   } catch (err) {
+    console.log('Erro in fetching posts', err);
     dispatch(handleSnack({ isOpen: true, message: err?.response?.data?.message }));
   }
 });
