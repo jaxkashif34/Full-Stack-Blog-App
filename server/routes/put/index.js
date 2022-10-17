@@ -5,7 +5,6 @@ const prisma = new PrismaClient();
 const { uploadToCloudinary } = require('../../config');
 const editPost = async (req, res) => {
   const { title, content, tags, favoritedBy, isLiked } = req.body;
-  console.log(req.body)
   const isAlreadyLiked = isLiked && JSON.parse(isLiked);
   const file = req.file;
   const postId = req.params.id;

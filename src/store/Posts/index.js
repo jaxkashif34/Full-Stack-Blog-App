@@ -10,7 +10,6 @@ export const getPosts = createAsyncThunk('post/getPosts', async (data, thunkApi)
       method: 'GET',
       url: `${API_ROUTE}/all-posts`,
     });
-    console.log('All Posts', response);
     return response.data.data;
   } catch (err) {
     console.log('Erro in fetching posts', err);

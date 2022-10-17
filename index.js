@@ -13,12 +13,6 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'build')));
 
-if (process.env.NODE_ENV === 'production') {
-  app.get('/*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'build/index.html'));
-  });
-}
-
 // ******************** POSTS ********************
 app.get('/all-posts', getAllPosts);
 
@@ -40,6 +34,12 @@ app.delete('/delete-user/:id', deleteUser);
 
 // Edit User
 app.put('/edit-user/:id', upload.single('profile_pic'), editUser);
+
+if (process.env.NODE_ENV === 'production') {
+  app.get('/*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'build/index.html'));
+  });
+}
 
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => console.log(`⚡️ Server is up on http://localhost:${PORT}`));
