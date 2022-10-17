@@ -6,7 +6,10 @@ import { API_ROUTE } from '../utils';
 export const getPosts = createAsyncThunk('post/getPosts', async (data, thunkApi) => {
   const { dispatch } = thunkApi;
   try {
-    const response = await Axios.get(`${API_ROUTE}/all-posts`);
+    const response = await Axios({
+      method: 'GET',
+      url: `${API_ROUTE}/all-posts`,
+    });
     console.log('All Posts', response.data.data);
     return response.data.data;
   } catch (err) {
