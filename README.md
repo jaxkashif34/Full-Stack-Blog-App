@@ -1,6 +1,9 @@
 # Blog-App
 
 An Amazing Blog App  where you can do CRUD operations on User and Blogs and also you can like the blogs.
+
+# Live Preview
+- [Live Preview](https://amazing-blog-app.herokuapp.com/)
 # Features
 
 ## User Interface
