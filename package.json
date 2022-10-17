@@ -36,7 +36,7 @@
   "scripts": {
     "start-client": "set PORT=3000 && react-scripts start",
     "dev": "nodemon index.js",
-    "start": "npx prisma migrate deploy && node index.js",
+    "start": "node index.js",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

@@ -7,7 +7,6 @@ export const getPosts = createAsyncThunk('post/getPosts', async (data, thunkApi)
   const { dispatch } = thunkApi;
   try {
     const response = await Axios.get(`${API_ROUTE}/all-posts`);
-    console.log('Fetched Posts', response?.data?.data);
     return response?.data?.data;
   } catch (err) {
     console.log('Erro in fetching posts', err);
@@ -49,7 +48,8 @@ export const handleEditPost = createAsyncThunk('post/handleFavorite', async (dat
     }
     return response?.data?.data;
   } catch (err) {
-    dispatch(handleSnack({ message: err?.message, isOpen: true }));
+    console.log('Error in edit post', err);
+    dispatch(handleSnack({ message: err?.response?.data?.message, isOpen: true }));
   }
 });
 export const handleCreatePost = createAsyncThunk('post/handleCreatePost', async (data, thunkApi) => {
@@ -118,7 +118,7 @@ const postsSlice = createSlice({
     });
     builder.addCase(handleEditPost.fulfilled, (state, { payload }) => {
       state.postStatus = 'success';
-      state.posts = state.posts.map((post) => (post.id === payload.id ? payload : post));
+      state.posts = state.posts.map((post) => (post?.id === payload?.id ? payload : post));
     });
     builder.addCase(handleEditPost.rejected, (state) => {
       state.postStatus = 'rejected';
