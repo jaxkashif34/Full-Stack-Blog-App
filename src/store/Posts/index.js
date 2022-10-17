@@ -7,7 +7,7 @@ export const getPosts = createAsyncThunk('post/getPosts', async (data, thunkApi)
   const { dispatch } = thunkApi;
   try {
     const response = await Axios.get(`${API_ROUTE}/all-posts`);
-    return response?.data?.data;
+    return response.data.data;
   } catch (err) {
     console.log('Erro in fetching posts', err);
     dispatch(handleSnack({ isOpen: true, message: err?.response?.data?.message }));
