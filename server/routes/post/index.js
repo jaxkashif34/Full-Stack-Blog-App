@@ -66,10 +66,12 @@ const createPost = async (req, res) => {
           res.json({ message: 'Post created successfully', data: result });
         })
         .catch((err) => {
+          console.log('Error in creating post', err);
           res.json({ message: 'Error in creating post', error: err });
         });
     })
     .catch((err) => {
+      console.log('Error in uploading', err);
       res.status(400).send({ message: 'Error in uploading', error: err });
     });
 };
@@ -135,10 +137,12 @@ const createUser = async (req, res) => {
           res.send({ message: `Welcome ${name}`, data: result });
         })
         .catch((err) => {
+          console.log('Error in saving user', err);
           res.status(404).send({ message: 'Error in saving user', error: err.message });
         });
     })
     .catch((err) => {
+      console.log('Error in uploading user profile', err);
       res.status(404).json({ message: 'Error in uploading user profile', error: err.message });
     });
 };
@@ -184,6 +188,7 @@ const loginSignInUser = async (req, res) => {
       res.json({ message: 'User not found' });
     }
   } catch (e) {
+    console.log('Errot in login', e);
     res.json({ message: JSON.stringify(e) });
   }
 };
