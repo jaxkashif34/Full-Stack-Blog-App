@@ -1,0 +1,66 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String       @id @default(uuid())
+  name         String
+  email        String       @unique
+  role         Role         @default(AUTHER)
+  profilePic   Profile_pic?
+  DOB          DateTime
+  password     String
+  writterPost  Post[]       @relation("WrittenPost")
+  favoritePost Post[]
+  emailUpdates Boolean?     @default(false)
+}
+
+model Profile_pic {
+  id           String @id @default(uuid())
+  assetId      String
+  secureUrl    String
+  originalName String
+  user         User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId       String @unique
+}
+
+model Post {
+  id         String   @id @default(uuid())
+  title      String
+  body       String
+  tags       String[] // need to figure out that how we will store unique items in scalar list
+  autherId   String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  bgImg      BgImage?
+  auther     User     @relation("WrittenPost", fields: [autherId], references: [id], onDelete: Cascade)
+  favoriteBy User[]
+}
+
+model BgImage {
+  id           String @id @default(uuid())
+  assetId      String
+  secureUrl    String
+  originalName String
+  post         Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId       String @unique
+}
+
+model Token {
+  token String @id
+  exp   String
+  iat   String
+}
+
+enum Role {
+  AUTHER
+  ADMIN
+}
