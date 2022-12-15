@@ -13,7 +13,7 @@ const accessTokenName: string = 'accessToken';
 const refreshTokenName: string = 'refreshToken';
 
 const generateToken = (user: User, time: string) => {
-  return jwt.sign({ id: user.id, name: user.name, role: user.role }, process.env.JWT_ACCESS_SECRET!, { expiresIn: time });
+  return jwt.sign({ userId: user.id, name: user.name, role: user.role }, process.env.JWT_ACCESS_SECRET!, { expiresIn: time });
 };
 
 const generateCookie = (res: Response, token: string, tokenName: string) => {
@@ -24,9 +24,9 @@ const generateCookie = (res: Response, token: string, tokenName: string) => {
   });
 };
 export const setToken = async (res: Response, user: User) => {
-  const exp: string = '2d';
+  const exp: string = (Date.now() + 1000 * 60 * 60 * 24 * 2).toString(); // 2 days
   const accessToken = generateToken(user, '1d');
-  const refreshToken = jwt.sign({ id: user.id, name: user.name, role: user.role }, process.env.JWT_REFRESH_SECRET!, {
+  const refreshToken = jwt.sign({ userId: user.id, name: user.name, role: user.role }, process.env.JWT_REFRESH_SECRET!, {
     expiresIn: exp,
   });
   generateCookie(res, accessToken, accessTokenName);
@@ -45,7 +45,9 @@ export const verifyToken = (tokenName: string) => {
     if (token == null) return res.status(400).json({ errors: 'missing token' });
     jwt.verify(token, tokenSecret, (err: any, userData: any) => {
       if (err) return res.status(400).json({ errors: err.message });
-      req.user = userData;
+      if (tokenName !== 'refreshToken') {
+        req.user = userData;
+      }
       next();
     });
   };

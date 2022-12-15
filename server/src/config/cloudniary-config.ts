@@ -29,7 +29,7 @@ interface File {
 
 const uploadToCloudinary = async (file: File) => {
   return cloudinary.uploader
-    .upload(file.path, { ...options, public_id: `blog-app/${file.originalname}` })
+    .upload(file.path ?? deafultPath, { ...options, public_id: `blog-app/${file.originalname ?? 'default_name'}` })
     .then((result) => ({
       assetId: result.asset_id,
       secureUrl: result.secure_url,

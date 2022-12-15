@@ -55,9 +55,10 @@ model BgImage {
 }
 
 model Token {
-  token String @id
+  id    String @id @default(uuid())
+  token String @unique
   exp   String
-  iat   String
+  iat   String @unique
 }
 
 enum Role {

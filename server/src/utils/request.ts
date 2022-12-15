@@ -6,5 +6,7 @@ export interface GetUserAuthInfoRequest extends Request {
     role: string;
     name: string;
     emailUpdates: boolean;
+    iat: string;
+    exp: string;
   };
 }

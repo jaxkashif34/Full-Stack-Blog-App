@@ -26,6 +26,6 @@ export const signUp = [
     // res.json({ imgData });
     const user = await saveInDabases(userDetails, imgData);
     await setToken(res, { id: user.id, name: user.name, role: user.role, emailUpdates: user.emailUpdates });
-    res.json('user created successfully');
+    res.json({ message: 'user created successfully' });
   },
 ];
