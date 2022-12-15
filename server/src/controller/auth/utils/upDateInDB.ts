@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
-import { FIELDS } from './fields';
+import { SELECT_FIELDS } from './fields';
 enum Role {
   ADMIN = 'ADMIN',
   AUTHER = 'AUTHER',
@@ -29,7 +29,7 @@ export const updateInDatabase = async (user: User, img: any, id: string) => {
           },
         },
       },
-      select: FIELDS,
+      select: SELECT_FIELDS,
     });
   } catch (err: any) {
     throw new Error(err);

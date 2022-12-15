@@ -38,7 +38,7 @@ export const setToken = async (res: Response, user: User) => {
   }
 };
 
-export const varifyToken = (tokenName: string) => {
+export const verifyToken = (tokenName: string) => {
   return (req: GetUserAuthInfoRequest, res: Response, next: NextFunction) => {
     const token = req.cookies[tokenName];
     const tokenSecret = tokenName === 'accessToken' ? process.env.JWT_ACCESS_SECRET! : process.env.JWT_REFRESH_SECRET!;

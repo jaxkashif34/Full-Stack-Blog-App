@@ -4,11 +4,11 @@ import { upload } from '../../middleware';
 import { hashPassword } from '../../utils/Encryption';
 import { errors } from '../../utils/errors';
 import { GetUserAuthInfoRequest } from '../../utils/request';
-import { varifyToken } from '../../utils/token';
+import { verifyToken } from '../../utils/token';
 import { editUserValidation } from '../../utils/validation/editUser';
 import { updateInDatabase } from './utils/upDateInDB';
 export const editUser = [
-  varifyToken('accessToken'),
+  verifyToken('accessToken'),
   upload.single('ProfilePic'),
   ...editUserValidation,
   async (req: GetUserAuthInfoRequest, res: Response) => {
