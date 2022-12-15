@@ -24,7 +24,7 @@ export const signInValidation = [
         return Promise.reject(err.message);
       }
     }),
-  body(FIELDS.password, 'password is required')
+  body(FIELDS.password)
     .exists()
     .withMessage('password is required')
     .escape()

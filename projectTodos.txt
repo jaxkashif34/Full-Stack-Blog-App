@@ -1,6 +1,0 @@
-set the date fomatter like this
-******** {dateFormatter.format(Date.parse(upadatedAt))}
-const dateFormatter = new Intl.DateTimeFormat(undefined, {
-  dateStyle: "medium",
-  timeStyle: "short",
-})  ********

@@ -24,8 +24,8 @@ const generateCookie = (res: Response, token: string, tokenName: string) => {
   });
 };
 export const setToken = async (res: Response, user: User) => {
-  const exp: string = '15s';
-  const accessToken = generateToken(user, '7s');
+  const exp: string = '2d';
+  const accessToken = generateToken(user, '1d');
   const refreshToken = jwt.sign({ id: user.id, name: user.name, role: user.role }, process.env.JWT_REFRESH_SECRET!, {
     expiresIn: exp,
   });

@@ -3,14 +3,14 @@
  * BottomBar component, and the Modal component
  * @returns The return value of the function is the value of the last expression in the function body.
  */
-import Nav from './components/Nav';
-import BottomBar from './components/BottomBar';
-import { getPosts } from './store/Posts';
+import Nav from './src/components/Nav';
+import BottomBar from './src/components/BottomBar';
+import { getPosts } from './src/store/Posts';
 import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
-import Routes from './routes';
-import SnackBar from './components/Snackbar';
-import Modal from './components/model';
+import Routes from './src/routes';
+import SnackBar from './src/components/Snackbar';
+import Modal from './src/components/model';
 function App() {
   const dispatch = useDispatch();
   useEffect(() => {
