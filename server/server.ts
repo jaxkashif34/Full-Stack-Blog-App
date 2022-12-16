@@ -12,14 +12,15 @@ app.use(cookieParser());
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '../client/build')));
-// import postRoutes from './src/routes/posts';
+import postRoutes from './src/routes/posts';
 import authRoutes from './src/routes/auth';
 import tokenRoutes from './src/routes/token/token';
 
 // ******************** POSTS ********************
-// app.use('/posts', postRoutes);
+app.use('/posts', postRoutes);
 // ******************** USER ********************
 app.use('/user', authRoutes);
+// ******************** TOKEN ********************
 app.use('/tkn', tokenRoutes);
 
 const PORT = process.env.SERVER_PORT || 8000;

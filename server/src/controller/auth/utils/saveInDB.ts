@@ -29,6 +29,6 @@ export const saveInDabases = async (user: User, img: any) => {
       select: SELECT_FIELDS,
     });
   } catch (err: any) {
-    throw new Error(err);
+    throw new Error(err.message);
   }
 };

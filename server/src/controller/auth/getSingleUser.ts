@@ -9,7 +9,7 @@ export const getSingleUser = [
   async (req: GetUserAuthInfoRequest, res: Response) => {
     const { id } = req.params;
     try {
-      if (id === req.user?.id || req.user?.role === 'ADMIN') {
+      if (id === req.user?.userId || req.user?.role === 'ADMIN') {
         const user = await prisma.user.findUnique({
           where: {
             id,

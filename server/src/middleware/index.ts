@@ -12,8 +12,8 @@ const allowedFiles = {
 export const upload = multer({
   storage: multer.diskStorage({
     destination: (req, file, cb) => {
-      if (file.fieldname === 'BgImage') {
-        cb(null, `${path.join(path.dirname(__dirname), 'uploads/BgImage')}`);
+      if (file.fieldname === 'postImg') {
+        cb(null, `${path.join(path.dirname(__dirname), 'uploads/postImg')}`);
       } else if (file.fieldname === 'ProfilePic') {
         cb(null, `${path.join(path.dirname(__dirname), 'uploads/ProfilePic')}`);
       } else {

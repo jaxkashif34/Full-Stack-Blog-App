@@ -1,10 +1,10 @@
 import { PrismaClient } from '@prisma/client';
 import { body } from 'express-validator';
-import { FIELDS } from './fields';
+import { AUTH_FIELDS } from '../../fields';
 const prisma = new PrismaClient();
-import { comparePassword } from '../Encryption';
+import { comparePassword } from '../../Encryption';
 export const signInValidation = [
-  body(FIELDS.email)
+  body(AUTH_FIELDS.email)
     .exists()
     .withMessage('Email is required')
     .escape()
@@ -24,9 +24,11 @@ export const signInValidation = [
         return Promise.reject(err.message);
       }
     }),
-  body(FIELDS.password)
+  body(AUTH_FIELDS.password)
     .exists()
     .withMessage('password is required')
+    .notEmpty()
+    .withMessage("password can't be empty")
     .escape()
     .trim()
     .isLength({ min: 6, max: 20 })

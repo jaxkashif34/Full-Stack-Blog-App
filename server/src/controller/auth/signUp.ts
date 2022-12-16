@@ -1,5 +1,5 @@
 import { GetUserAuthInfoRequest } from '../../utils/request';
-import { sigUpValidation } from '../../utils/validation/signUp';
+import { sigUpValidation } from '../../utils/validation/auth/signUp';
 import { Response } from 'express';
 import { errors } from '../../utils/errors';
 import { hashPassword } from '../../utils/Encryption';
@@ -12,8 +12,11 @@ export const signUp = [
   ...sigUpValidation,
   async (req: GetUserAuthInfoRequest, res: Response) => {
     const { name, email, password, role, DOB, emailUpdates } = req.body;
-    const { originalname, path } = req.file;
     if (errors(req).length > 0) return res.status(400).json({ errors: errors(req) });
+    if (!req.file) {
+      return res.status(400).json({ errors: 'Please upload a profile picture' });
+    }
+    const { originalname, path } = req.file;
     const userDetails = {
       name,
       email,

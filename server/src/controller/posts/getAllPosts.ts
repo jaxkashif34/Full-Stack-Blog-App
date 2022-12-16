@@ -1,33 +1,23 @@
-/* A query to get all posts from the database. */
 import { PrismaClient } from '@prisma/client';
+import { Response } from 'express';
+import { GetUserAuthInfoRequest } from '../../utils/request';
+import { verifyToken } from '../../utils/token';
 const prisma = new PrismaClient();
-import { Response, Request } from 'express';
-export const getAllPosts = async (req:Request, res:Response) => {
-  try {
-    const allPosts = await prisma.post.findMany({
-      include: {
-        bg_image: {
-          select: {
-            secure_url: true,
-            original_filename: true,
-          },
-        },
-        favoriteBy: {
-          select: {
-            name: true,
-            id: true,
-          },
-        },
-        auther: {
-          select: {
-            name: true,
-          },
-        },
-      },
-    });
-    res.json({ message: 'Fetched All Posts', data: allPosts });
-  } catch (e) {
-    console.log('Error in fetching Posts', e);
-    res.status(400).json({ message: 'Error in fetching Posts', message: e });
-  }
-};
+export const getAllPosts = [
+  verifyToken('accessToken'),
+  async (req: GetUserAuthInfoRequest, res: Response) => {
+    const user = req.user;
+
+    try {
+      if (user.role === 'ADMIN') {
+        const posts = await prisma.post.findMany();
+        res.json({ posts });
+      } else {
+        // show unauthorized error
+        res.status(401).json({ message: 'Unauthorized' });
+      }
+    } catch (err: any) {
+      res.status(500).json({ message: err.message });
+    }
+  },
+];
