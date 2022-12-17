@@ -55,6 +55,8 @@ An Amazing Blog App  where you can do CRUD operations on User and Blogs and also
 - Cors
 - dotenv
 - Prisma Client
+- cookie-parser
+- jsonwebtoken
 
 # Installation
  - You need to start both servers fron-end and back-end to work properly..
