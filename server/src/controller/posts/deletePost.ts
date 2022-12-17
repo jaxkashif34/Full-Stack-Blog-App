@@ -1,17 +1,25 @@
-// /* The above code is deleting a post and a user from the database. */
-// import { PrismaClient } from '@prisma/client';
-// const prisma = new PrismaClient();
-// import { Response, Request } from 'express';
-// export const deletePost = async (req: Request, res: Response) => {
-//   const postId = req.params.id;
-//   try {
-//     await prisma.post.delete({
-//       where: {
-//         id: postId,
-//       },
-//     });
-//     res.json({ message: 'Post deleted successfully' });
-//   } catch (e) {
-//     res.status(400).json({ message: 'Error deleting post', error: e });
-//   }
-// };
+import { PrismaClient } from '@prisma/client';
+import { Response } from 'express';
+import { GetUserAuthInfoRequest } from '../../utils/request';
+import { verifyToken } from '../../utils/token';
+const prisma = new PrismaClient();
+export const deletePost = [
+  // Validate the request
+  verifyToken('accessToken'),
+  async (req: GetUserAuthInfoRequest, res: Response) => {
+    const { id } = req.params;
+
+    if (id !== req.user?.userId || req.user?.role !== 'ADMIN') return res.status(401).json({ errors: 'Unauthorized' });
+    // Delete the post
+    try {
+      await prisma.post.delete({
+        where: {
+          id,
+        },
+      });
+      res.json({ message: 'Post deleted' });
+    } catch (err: any) {
+      res.status(400).json({ errors: err.message });
+    }
+  },
+];

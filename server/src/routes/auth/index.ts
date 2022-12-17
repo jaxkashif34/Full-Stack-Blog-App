@@ -21,7 +21,7 @@ router.get('/get-user/:id', getSingleUser);
 router.get('/all-users', allUsers);
 
 // LOGOUT USER
-router.post('/logout', logoutUser);
+router.post('/logout/:id', logoutUser);
 
 // Delete a User
 router.delete('/delete-user/:id', deleteUser);

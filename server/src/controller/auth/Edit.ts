@@ -28,12 +28,8 @@ export const editUser = [
       ...(emailUpdates != null && { emailUpdates }),
     };
     const imgData = file != null && (await uploadToCloudinary({ path: file.path, originalname: file.originalname }));
-    if (id === req.user?.userId || req.user?.role === 'ADMIN') {
-      updateInDatabase(userData, imgData, id);
-      res.json("User's data has been updated");
-    } else {
-      // show UnAuthorized error
-      res.status(401).json({ errors: 'UnAuthorized' });
-    }
+    if (id !== req.user?.userId || req.user?.role !== 'ADMIN') return res.status(401).json({ errors: 'UnAuthorized' });
+    updateInDatabase(userData, imgData, id);
+    res.json("User's data has been updated");
   },
 ];

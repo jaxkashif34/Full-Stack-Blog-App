@@ -9,17 +9,14 @@ export const getSingleUser = [
   async (req: GetUserAuthInfoRequest, res: Response) => {
     const { id } = req.params;
     try {
-      if (id === req.user?.userId || req.user?.role === 'ADMIN') {
-        const user = await prisma.user.findUnique({
-          where: {
-            id,
-          },
-          select: SELECT_FIELDS,
-        });
-        res.json(user);
-      } else {
-        res.status(401).json({ error: 'You are not authorized to get this user' });
-      }
+      if (id !== req.user?.userId || req.user?.role !== 'ADMIN') return res.status(401).json({ error: 'You are not authorized to get this user' });
+      const user = await prisma.user.findUnique({
+        where: {
+          id,
+        },
+        select: SELECT_FIELDS,
+      });
+      res.json(user);
     } catch (error: any) {
       res.status(400).json({ error: error.message });
     }

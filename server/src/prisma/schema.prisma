@@ -40,12 +40,12 @@ model Post {
   autherId   String
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
-  bgImg      PpostImg?
+  postImg    PostImg?
   auther     User     @relation("WrittenPost", fields: [autherId], references: [id], onDelete: Cascade)
   favoriteBy User[]
 }
 
-model PpostImg {
+model PostImg {
   id           String @id @default(uuid())
   assetId      String
   secureUrl    String

@@ -42,7 +42,7 @@ export const verifyToken = (tokenName: string) => {
   return (req: GetUserAuthInfoRequest, res: Response, next: NextFunction) => {
     const token = req.cookies[tokenName];
     const tokenSecret = tokenName === 'accessToken' ? process.env.JWT_ACCESS_SECRET! : process.env.JWT_REFRESH_SECRET!;
-    if (token == null) return res.status(400).json({ errors: 'missing token' });
+    if (token == null) return res.status(400).json({ errors: "please sign in or you don't have token" });
     jwt.verify(token, tokenSecret, (err: any, userData: any) => {
       if (err) return res.status(400).json({ errors: err.message });
       if (tokenName !== 'refreshToken') {

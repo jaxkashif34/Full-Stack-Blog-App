@@ -8,17 +8,14 @@ export const deleteUser = [
   async (req: GetUserAuthInfoRequest, res: Response) => {
     const { id } = req.params;
     try {
-      if (id === req.user?.userId || req.user?.role === 'ADMIN') {
-        await prisma.user.delete({
-          where: {
-            id,
-          },
-        });
-        clearCookies(res);
-        res.json({ message: 'User Deleted Successfully' });
-      } else {
-        res.status(401).json({ error: 'You are not authorized to delete this user' });
-      }
+      if (id !== req.user?.userId || req.user?.role !== 'ADMIN') return res.status(401).json({ error: 'You are not authorized to delete this user' });
+      await prisma.user.delete({
+        where: {
+          id,
+        },
+      });
+      clearCookies(res);
+      res.json({ message: 'User Deleted Successfully' });
     } catch (error: any) {
       res.status(400).json({ error: error.message });
     }

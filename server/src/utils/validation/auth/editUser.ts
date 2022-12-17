@@ -7,7 +7,6 @@ export const editUserValidation = [
   // name validation
   body(AUTH_FIELDS.name)
     .optional()
-    .escape()
     .trim()
     .isLength({ min: 3, max: 20 })
     .withMessage('name must be between 3 and 20 characters')
@@ -17,7 +16,6 @@ export const editUserValidation = [
   // email validation
   body(AUTH_FIELDS.email)
     .optional()
-    .escape()
     .trim()
     .toLowerCase()
     .isEmail()
@@ -47,7 +45,6 @@ export const editUserValidation = [
   // password validation
   body(AUTH_FIELDS.password)
     .optional()
-    .escape()
     .trim()
     .isLength({ min: 6, max: 20 })
     .withMessage('password must be between 6 and 20 characters')
@@ -60,7 +57,6 @@ export const editUserValidation = [
   // confirmPassword validation
   body(AUTH_FIELDS.confirmPassword)
     .optional()
-    .escape()
     .trim()
     .custom((value, { req }) => {
       if (value !== req.body.password) return Promise.reject('confirmPassword must match the password field');
@@ -68,7 +64,6 @@ export const editUserValidation = [
     }),
   body(AUTH_FIELDS.oldPassword)
     .trim()
-    .escape()
     .optional()
     .isLength({ min: 6, max: 20 })
     .withMessage('oldPassword must be between 6 and 20 characters')
@@ -91,7 +86,6 @@ export const editUserValidation = [
     }),
   // user role validation
   body(AUTH_FIELDS.role)
-    .escape()
     .trim()
     .optional()
     .isIn(['AUTHER', 'ADMIN'])
@@ -115,11 +109,10 @@ export const editUserValidation = [
       return true;
     }),
   body(AUTH_FIELDS.DOB)
-    .escape()
     .trim()
     .optional()
     // regular expression for matching this format YYYY-MM-DD
     .matches('^(19[5-9][0-9]|20[0-9][0-9])-([1-9]|0[1-9]|1[012])-([1-9]|0[1-9]|[12][0-9]|3[01])$')
     .withMessage(`Please enter a valid date of birth in the format 'YYYY-MM-DD'`),
-  body(AUTH_FIELDS.emailUpdates).escape().trim().optional().isBoolean().withMessage('Must be a boolean true or false'),
+  body(AUTH_FIELDS.DOB).trim().optional().isBoolean().withMessage('Must be a boolean true or false'),
 ];

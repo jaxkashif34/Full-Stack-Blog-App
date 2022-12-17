@@ -13,7 +13,7 @@ export const saveInDB = async (post: Post, img: any, autherId: string) => {
     return await prisma.post.create({
       data: {
         ...post,
-        bgImg: {
+        postImg: {
           create: {
             ...img,
           },

@@ -9,13 +9,9 @@ export const getAllPosts = [
     const user = req.user;
 
     try {
-      if (user.role === 'ADMIN') {
-        const posts = await prisma.post.findMany();
-        res.json({ posts });
-      } else {
-        // show unauthorized error
-        res.status(401).json({ message: 'Unauthorized' });
-      }
+      if (user.role !== 'ADMIN') return res.status(401).json({ message: 'Unauthorized' });
+      const posts = await prisma.post.findMany();
+      res.json({ posts });
     } catch (err: any) {
       res.status(500).json({ message: err.message });
     }
